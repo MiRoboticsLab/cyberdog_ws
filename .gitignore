@@ -1,0 +1,23 @@
+# cache and binary files during ros build
+build/
+log/
+install/
+
+# files create by macOS
+*.DS_Store
+
+# vs code workspace 
+.vscode/
+
+# swp files
+*.swp
+
+# inner repos
+bridges/
+devices/
+interaction/
+manager/
+motion/
+sensors/
+utils/
+
