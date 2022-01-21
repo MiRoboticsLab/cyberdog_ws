@@ -1,0 +1,17 @@
+launch_nodes:
+  debug_param: "lxterminal -e gdb -ex run --args"
+
+  # Must launch, if package or executable error, launcher will stop and throw error
+  base_nodes:
+    # - example_node_def_name:
+    #       package: "example_pkg"              (string)
+    #       executable: "example_exe"           (string)
+    #       #[optional] output_screen: false    (true/false)
+    #       #[optional] name: 'example_name'    (string)
+    #       #[optional] load_nodes_param: false (true/false)
+    #       #[optional] enable_debug: false     (true/false)
+    #       #[optional] respawn: false     (true/false)
+
+  # Try to launch, if package or executable error, launcher will notice but skip that node
+  other_nodes:
+    
