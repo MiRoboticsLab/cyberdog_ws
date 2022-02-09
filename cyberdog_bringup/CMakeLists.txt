@@ -22,8 +22,6 @@ find_package(ament_cmake_python REQUIRED)
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY params DESTINATION share/${PROJECT_NAME})
 
-ament_python_install_package(athena_pycommon)
-
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
