@@ -20,7 +20,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     allow_sensor_abnormality_arg = DeclareLaunchArgument(
-        "allow_sensor_abnormality", default_value='False'   # 是否允许传感器异常
+        'allow_sensor_abnormality', default_value='False'   # 是否允许传感器异常
     )
 
     sensor_manager_node = Node(
@@ -30,7 +30,7 @@ def generate_launch_description():
             name='sensor_manager',
             output='screen',
             parameters=[{
-                "allow_sensor_abnormality": LaunchConfiguration('allow_sensor_abnormality'),
+                'allow_sensor_abnormality': LaunchConfiguration('allow_sensor_abnormality'),
             }]
         )
 
