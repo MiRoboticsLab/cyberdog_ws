@@ -1,0 +1,62 @@
+type:                                         # 类型约束
+  decide:                                     # 启动时，前驱模式-关系类型
+    off:                  &off_dec        0   # 关闭(交付时默认开启，调试时可临时关闭)
+    on_and_father:        &on1_dec        1   # 开启-父亲前驱(前驱模式必须为当前模式的父亲节点，即必须紧邻)
+    on_and_ancestor:      &on2_dec        2   # 开启-祖宗前驱(前驱模式必须为当前模式的祖宗节点，即可不紧邻)
+  enable:                                     # 启动时，功能节点-使能类型
+    off:                  &off_ena        0   # 关闭(交付时默认开启，调试时可临时关闭)
+    on_and_immortal:      &on1_ena        1   # 开启-不朽(若不存在则开启，若开启则永生)
+    on_and_restart:       &on2_ena        2   # 开启-重启(若不存在则开启，若存在则重启)
+    on_and_inherit:       &on3_ena        3   # 开启-继承(若不存在则开启，若存在则继承)
+  launch:
+    - &node_1
+      name: xxx1
+      file: xxx1.launch.py
+    - &node_2
+      name: xxx1
+      file: xxx1.launch.py
+    - &node_3
+      name: xxx1
+      file: xxx1.launch.py
+    - &node_4
+      name: xxx1
+      file: xxx1.launch.py
+    - &node_5
+      name: xxx1
+      file: xxx1.launch.py
+    - &node_6
+      name: xxx1
+      file: xxx1.launch.py
+    - &node_7
+      name: xxx1
+      file: xxx1.launch.py
+    - &node_8
+      name: xxx1
+      file: xxx1.launch.py
+data:                                       # 值约束
+  mode:                                     # 模式
+    - name: mode_A                          # A模式
+      precursor:                            # 前驱模式
+        - {mode: null,      decide: *off_dec}
+      function:                             # 依赖项目
+        - {launch: *node_1, enable: *on1}
+        - {launch: *node_2, enable: *on1}
+        - {launch: *node_3, enable: *on1}
+        - {launch: *node_4, enable: *on2}
+        - {launch: *node_5, enable: *off}
+        - {launch: *node_6, enable: *on2}
+    - name: mode_B
+      precursor:
+        - {mode: mode_A,    decide: *on1_dec}
+      function:
+        - {launch: *node_5, enable: *on2}
+        - {launch: *node_6, enable: *of2}
+        - {launch: *node_7, enable: *on3}
+    - name: mode_C
+      precursor:
+        - {mode: mode_A,    decide: *on2_dec}
+        - {mode: mode_B,    decide: *on2_dec}
+      function:
+        - {launch: *node_6, enable: *on3}
+        - {launch: *node_7, enable: *of3}
+        - {launch: *node_8, enable: *on2}
