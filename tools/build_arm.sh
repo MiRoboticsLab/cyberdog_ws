@@ -21,11 +21,11 @@ vcs import . < cyberdog_ws/cyberdog.repos
 cd ..
 
 echo -n "build cyberdog ros2 applications source code"
-colcon build --merge-install --install-base /opt/ros2/cyberdog --parallel-workers 40 --packages-select=protocol
+colcon build --merge-install --install-base /opt/ros2/cyberdog --parallel-workers 40
 
 echo -n "get commit id sum of all repos"
 cd /
-git clone git@git.n.xiaomi.com:MiRoboticsLab/os/toolbox/carpo_deb_repos.git -b t_dev
+git clone git@git.n.xiaomi.com:MiRoboticsLab/os/toolbox/carpo_deb_repos.git
 cd carpo_deb_repos/version_manager_tools
 ./get_commitid_sum.sh ros_platform_code.xml carpo-cyberdog-ros2-lib
 cp ros_platform_code.commitidsum /
