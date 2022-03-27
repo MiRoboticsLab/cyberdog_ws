@@ -28,7 +28,7 @@ colcon build --merge-install --install-base /opt/ros2/cyberdog --parallel-worker
 
 echo -n "get commit id sum of all repos"
 cd /
-git clone git@git.n.xiaomi.com:MiRoboticsLab/os/toolbox/carpo_deb_repos.git caculate_commitid_sum
+git clone git@git.n.xiaomi.com:MiRoboticsLab/os/toolbox/carpo_deb_repos.git -b t_dev caculate_commitid_sum
 cd caculate_commitid_sum/version_manager_tools
 ./get_commitid_sum.sh ros_platform_code.xml carpo-cyberdog-ros2-lib
 cp ros_platform_code.commitidsum /carpo_deb_repos
