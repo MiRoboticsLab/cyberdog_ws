@@ -362,70 +362,72 @@ function(automatically_generate_launch_module_files)
 
   set(_automatic_key data.launch.initiative.automatic)
   get_length(${_automatic_key} _automatic_size)
-  math(EXPR _automatic_size "(${_automatic_size}-1)")
-  foreach(_automatic_index RANGE 0 ${_automatic_size} 1)
-    get_value("${_automatic_key}.${_automatic_index}.enable" _enable)
-    if(NOT ${_enable})
-      continue()  # launch 未使能，忽略
-    endif()
-    get_length("${_automatic_key}.${_automatic_index}.module.nodes" _nodes_size)
-
-    if(NOT ${_nodes_size})
-      continue() # 节点列表为空，忽略
-    endif()
-
-    get_launch_data(_launch)
-    list(APPEND _launch
-    "from launch_ros.actions import Node\n"
-    "def generate_launch_description():\n"
-    "${_tab_1}user_env_var = 'USERNAME' if platform.system() == 'Windows' else 'USER'\n"
-    "${_tab_1}return LaunchDescription(${front_bracket}\n"
-    "${_tab_2}LogInfo(msg=(EnvironmentVariable(name=user_env_var), ' 正在初始化 launch ...')),\n"
-    )
-
-    set(_nodes_key ${_automatic_key}.${_automatic_index}.module.nodes)
-    math(EXPR _nodes_size "(${_nodes_size}-1)")
-    foreach(_nodes_index RANGE 0 ${_nodes_size} 1)
-      get_value("${_nodes_key}.${_nodes_index}.enable" _enable)
+  if(${_automatic_size})
+    math(EXPR _automatic_size "(${_automatic_size}-1)")
+    foreach(_automatic_index RANGE 0 ${_automatic_size} 1)
+      get_value("${_automatic_key}.${_automatic_index}.enable" _enable)
       if(NOT ${_enable})
-        continue()  # 节点未使能，忽略
+        continue()  # launch 未使能，忽略
+      endif()
+      get_length("${_automatic_key}.${_automatic_index}.module.nodes" _nodes_size)
+
+      if(NOT ${_nodes_size})
+        continue() # 节点列表为空，忽略
       endif()
 
-      get_keys("${_nodes_key}.${_nodes_index}.module" _keys)
-      list(FIND _keys "arguments" _keys_index)
+      get_launch_data(_launch)
+      list(APPEND _launch
+      "from launch_ros.actions import Node\n"
+      "def generate_launch_description():\n"
+      "${_tab_1}user_env_var = 'USERNAME' if platform.system() == 'Windows' else 'USER'\n"
+      "${_tab_1}return LaunchDescription(${front_bracket}\n"
+      "${_tab_2}LogInfo(msg=(EnvironmentVariable(name=user_env_var), ' 正在初始化 launch ...')),\n"
+      )
 
-      if(${_keys_index} GREATER_EQUAL 0)
-        declare_launch_argument("${_nodes_key}.${_nodes_index}.module.arguments")
-      endif()
-
-      list(APPEND _launch "${_tab_2}Node(\n")
-      foreach(_key IN LISTS _keys)
-        get_value("${_nodes_key}.${_nodes_index}.module.${_key}" _key_value)
-        if(${_key_value} STREQUAL "None")
-          continue()  # 节点属性为空，将忽略
+      set(_nodes_key ${_automatic_key}.${_automatic_index}.module.nodes)
+      math(EXPR _nodes_size "(${_nodes_size}-1)")
+      foreach(_nodes_index RANGE 0 ${_nodes_size} 1)
+        get_value("${_nodes_key}.${_nodes_index}.enable" _enable)
+        if(NOT ${_enable})
+          continue()  # 节点未使能，忽略
         endif()
 
-        if((${_key} STREQUAL "namespace") OR
-            (${_key} STREQUAL "package") OR
-            (${_key} STREQUAL "executable") OR
-            (${_key} STREQUAL "name") OR
-            (${_key} STREQUAL "exec_name"))
-          list(APPEND _launch "${_tab_3}${_key}='${_key_value}',\n")
-        elseif(${_key} STREQUAL "parameters")
-          definition_launch_parameters("${_nodes_key}.${_nodes_index}.module.${_key}" "parameters")
-        elseif(${_key} STREQUAL "remappings")
-          definition_launch_remappings("${_nodes_key}.${_nodes_index}.module.${_key}" "remappings")
-        elseif(${_key} STREQUAL "arguments")
-          definition_launch_argument("${_nodes_key}.${_nodes_index}.module.${_key}" "arguments")
+        get_keys("${_nodes_key}.${_nodes_index}.module" _keys)
+        list(FIND _keys "arguments" _keys_index)
+
+        if(${_keys_index} GREATER_EQUAL 0)
+          declare_launch_argument("${_nodes_key}.${_nodes_index}.module.arguments")
         endif()
+
+        list(APPEND _launch "${_tab_2}Node(\n")
+        foreach(_key IN LISTS _keys)
+          get_value("${_nodes_key}.${_nodes_index}.module.${_key}" _key_value)
+          if(${_key_value} STREQUAL "None")
+            continue()  # 节点属性为空，将忽略
+          endif()
+
+          if((${_key} STREQUAL "namespace") OR
+              (${_key} STREQUAL "package") OR
+              (${_key} STREQUAL "executable") OR
+              (${_key} STREQUAL "name") OR
+              (${_key} STREQUAL "exec_name"))
+            list(APPEND _launch "${_tab_3}${_key}='${_key_value}',\n")
+          elseif(${_key} STREQUAL "parameters")
+            definition_launch_parameters("${_nodes_key}.${_nodes_index}.module.${_key}" "parameters")
+          elseif(${_key} STREQUAL "remappings")
+            definition_launch_remappings("${_nodes_key}.${_nodes_index}.module.${_key}" "remappings")
+          elseif(${_key} STREQUAL "arguments")
+            definition_launch_argument("${_nodes_key}.${_nodes_index}.module.${_key}" "arguments")
+          endif()
+        endforeach()
+        list(APPEND _launch "${_tab_2}),\n")
       endforeach()
-      list(APPEND _launch "${_tab_2}),\n")
-    endforeach()
 
-    list(APPEND _launch "${_tab_1}${back_bracket})\n")
-    get_value("${_automatic_key}.${_automatic_index}.module.file_name" _target_file)
-    generate_launch_file(${_target_file} ${_launch})
-  endforeach()
+      list(APPEND _launch "${_tab_1}${back_bracket})\n")
+      get_value("${_automatic_key}.${_automatic_index}.module.file_name" _target_file)
+      generate_launch_file(${_target_file} ${_launch})
+    endforeach()
+  endif()
 endfunction()
 
 macro(add_launch_meta _target_key)
@@ -440,34 +442,36 @@ macro(add_launch_meta _target_key)
   endif()
 
   get_length(${_target_key} _target_size)
-  math(EXPR _target_size "(${_target_size}-1)")
-  foreach(_target_index RANGE 0 ${_target_size} 1)
-    get_value("${_target_key}.${_target_index}.enable" _enable)
-    if(NOT ${_enable})  # launch 未使能
-      continue()
-    endif()
+  if(${_target_size})
+    math(EXPR _target_size "(${_target_size}-1)")
+    foreach(_target_index RANGE 0 ${_target_size} 1)
+      get_value("${_target_key}.${_target_index}.enable" _enable)
+      if(NOT ${_enable})  # launch 未使能
+        continue()
+      endif()
 
-    if(_ARG_IS_AUTOMATIC)
-      set(_target_package ${PROJECT_NAME})
-    else()
-      get_value("${_target_key}.${_target_index}.module.package_name" _target_package)
-    endif()
+      if(_ARG_IS_AUTOMATIC)
+        set(_target_package ${PROJECT_NAME})
+      else()
+        get_value("${_target_key}.${_target_index}.module.package_name" _target_package)
+      endif()
 
-    get_value("${_target_key}.${_target_index}.module.file_name" _target_file)
-    set(_launch_file_source "os.path.join(get_package_share_directory('${_target_package}'), 'launch', '${_target_file}')")
-    list(APPEND _launch "${_tab_2}LogInfo(msg=('正在加载 launch 文件:', ${_launch_file_source})),\n")
+      get_value("${_target_key}.${_target_index}.module.file_name" _target_file)
+      set(_launch_file_source "os.path.join(get_package_share_directory('${_target_package}'), 'launch', '${_target_file}')")
+      list(APPEND _launch "${_tab_2}LogInfo(msg=('正在加载 launch 文件:', ${_launch_file_source})),\n")
 
-    declare_launch_argument("${_target_key}.${_target_index}.module.arguments")
+      declare_launch_argument("${_target_key}.${_target_index}.module.arguments")
 
-    list(APPEND _launch
-    "${_tab_2}IncludeLaunchDescription(\n"
-    "${_tab_3}PythonLaunchDescriptionSource(${_launch_file_source}),\n"
-    )
+      list(APPEND _launch
+      "${_tab_2}IncludeLaunchDescription(\n"
+      "${_tab_3}PythonLaunchDescriptionSource(${_launch_file_source}),\n"
+      )
 
-    definition_launch_argument("${_target_key}.${_target_index}.module.arguments" "launch_arguments")
+      definition_launch_argument("${_target_key}.${_target_index}.module.arguments" "launch_arguments")
 
-    list(APPEND _launch "${_tab_2}),\n")
-  endforeach()
+      list(APPEND _launch "${_tab_2}),\n")
+    endforeach()
+  endif()
 endmacro()
 
 #
