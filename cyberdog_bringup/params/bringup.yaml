@@ -1,62 +1,211 @@
-type:                                         # 类型约束
-  decide:                                     # 启动时，前驱模式-关系类型
-    off:                  &off_dec        0   # 关闭(交付时默认开启，调试时可临时关闭)
-    on_and_father:        &on1_dec        1   # 开启-父亲前驱(前驱模式必须为当前模式的父亲节点，即必须紧邻)
-    on_and_ancestor:      &on2_dec        2   # 开启-祖宗前驱(前驱模式必须为当前模式的祖宗节点，即可不紧邻)
-  enable:                                     # 启动时，功能节点-使能类型
-    off:                  &off_ena        0   # 关闭(交付时默认开启，调试时可临时关闭)
-    on_and_immortal:      &on1_ena        1   # 开启-不朽(若不存在则开启，若开启则永生)
-    on_and_restart:       &on2_ena        2   # 开启-重启(若不存在则开启，若存在则重启)
-    on_and_inherit:       &on3_ena        3   # 开启-继承(若不存在则开启，若存在则继承)
+type:
+  enable:
+    _off:     &off      False
+    _on:      &on       True
+  nodes:
+    - &bringup
+      namespace: cyberdog
+      package: cyberdog_bringup
+      executable: cyberdog_bringup
+      name: bringup
+      exec_name: bringup
+      parameters:
+        - {parameters_int: 0,             description: "int 键值对"}
+        - {parameters_float: 0.1,         description: "float 键值对"}
+        - {parameters_bool: True,         description: "bool 键值对"}
+        - {parameters_string: "string string", description: "string 键值对"}
+        - {parameters_strings: 'string string', description: "string 键值对"}
+        - {parameters_yaml: xxx.yaml, description: "参数文件"}
+        - {<include>: xxxxx.yaml, description: "加载其他参数文件"}
+        - {<include>: {package_name: cyberdog_bringup, config_path: params, yaml_name: xxx.yaml}, description: "加载其他参数文件"}
+      remappings:
+        - {from: xxx1_topic,          to: xxx2_topic}
+        - {from: xxx1_topic,          to: xxx3_topic}
+        - {from: xxx1_service,        to: xxx2_service}
+      arguments:
+        - {bringup_argument_int: 0,             description: "int 键值对"}
+        - {bringup_argument_float: 0.1,         description: "float 键值对"}
+        - {bringup_argument_bool: True,         description: "bool 键值对"}
+        - {bringup_argument_string: string, description: "string 键值对"}
+    - &connector
+      namespace: cyberdog
+      package: connector
+      executable: connector
+      name: connector
+      exec_name: null
+      parameters: 
+        - {parameters_int: 0,             description: "int 键值对"}
+        - {parameters_float: 0.1,         description: "float 键值对"}
+        - {parameters_bool: True,         description: "bool 键值对"}
+        - {parameters_string: "string string", description: "string 键值对"}
+        - {parameters_strings: 'string string', description: "string 键值对"}
+        - {parameters_yaml: xxx.yaml, description: "参数文件"}
+        - {<include>: xxxxx.yaml, description: "加载其他参数文件"}
+      remappings: null
+      arguments: 
+        - {connector_argument_int: 0, description: "int 键值对"}
+        - {connector_argument_float: 0.1, description: "float 键值对"}
+        - {connector_argument_bool: True, description: "bool 键值对"}
+        - {connector_argument_string: string, description: "string 键值对"}
+    - &device_manager
+      namespace: cyberdog
+      package: device_manager
+      executable: device_manager
+      name: device_manager
+      exec_name: null
+      parameters: null
+      remappings: null
+      arguments: null
+    - &sensor_manager
+      namespace: cyberdog
+      package: sensor_manager
+      executable: sensor_manager
+      name: sensor_manager
+      exec_name: null
+      parameters: null
+      remappings: null
+      arguments: null
+    - &cyberdog_manager
+      namespace: cyberdog
+      package: cyberdog_manager
+      executable: cyberdog_manager
+      name: cyberdog_manager
+      exec_name: null
+      parameters: null
+      remappings: null
+      arguments: null
+    - &motion_manager
+      namespace: cyberdog
+      package: motion_manager
+      executable: motion_manager
+      name: motion_manager
+      exec_name: null
+      parameters: null
+      remappings: null
+      arguments: null
+  launchs:
+    automatic:
+      - &base
+        file_name: base.launch.py
+        arguments:
+          - {argument_int: 0, description: "int 键值对"}
+          - {argument_float: 0.1, description: "float 键值对"}
+          - {argument_bool: True, description: "bool 键值对"}
+          - {argument_string: string, description: "string 键值对"}
+        param:
+          cmd: null
+          name: null
+          cwd: null
+          env: null
+          additional_env: null
+          shell: null
+          sigterm_timeout: null
+          sigkill_timeout: null
+          emulate_tty: null
+          prefix: null
+          output: screen
+          output_format: null
+          log_cmd: null
+          on_exit: null
+          respawn: true
+          respawn_delay:  1
+        events:
+          handled:
+            shutdown_process: null
+            signal_process: null
+            process_stdin: null
+            shutdown: null
+          emitted:
+            process_started: null
+            process_exited: null
+            process_stdout: null
+            process_stderr: null
+        nodes:
+          - {module: *bringup,          enable: *on}
+          - {module: *connector,        enable: *off}
+          - {module: *device_manager,   enable: *off}
+          - {module: *sensor_manager,   enable: *off}
+          - {module: *cyberdog_manager, enable: *off}
+          - {module: *motion_manager,   enable: *off}
+      - &base2
+        file_name: base2.launch.py
+        arguments:
+          - {argument_int: 0, description: "int 键值对"}
+          - {argument_float: 0.1, description: "float 键值对"}
+          - {argument_bool: True, description: "bool 键值对"}
+          - {argument_string: string, description: "string 键值对"}
+        param:
+          cmd: null
+          name: null
+          cwd: null
+          env: null
+          additional_env: null
+          shell: null
+          sigterm_timeout: null
+          sigkill_timeout: null
+          emulate_tty: null
+          prefix: null
+          output: screen
+          output_format: null
+          log_cmd: null
+          on_exit: null
+          respawn: true
+          respawn_delay:  1
+        events:
+          handled:
+            shutdown_process: null
+            signal_process: null
+            process_stdin: null
+            shutdown: null
+          emitted:
+            process_started: null
+            process_exited: null
+            process_stdout: null
+            process_stderr: null
+        nodes:
+          - {module: *bringup,          enable: *on}
+          - {module: *connector,        enable: *on}
+          - {module: *device_manager,   enable: *on}
+          - {module: *sensor_manager,   enable: *on}
+          - {module: *cyberdog_manager, enable: *on}
+          - {module: *motion_manager,   enable: *on}
+    manual:
+      - &navigation2
+        package_name: navigation2
+        file_name: file_name1.launch.py
+        arguments:
+          - {argument_int: 0, description: "int 键值对"}
+          - {argument_float: 0.1, description: "float 键值对"}
+          - {argument_bool: True, description: "bool 键值对"}
+          - {argument_string: string, description: "string 键值对"}
+          - {argument_file: xxx.yaml, description: "string 键值对"}
+      - &navigation3
+        package_name: navigation3
+        file_name: file_name2.launch.py
+        arguments: 
+          - {argument_int: 0, description: "int 键值对"}
+          - {argument_float: 0.1, description: "float 键值对"}
+          - {argument_bool: True, description: "bool 键值对"}
+          - {argument_string: string, description: "string 键值对"}
+      - &navigation4
+        package_name: 'navigation4'
+        file_name: 'file_name3.launch.py'
+        arguments: 
+          - {argument_int: 0, description: "int 键值对"}
+          - {argument_float: 0.1, description: "float 键值对"}
+          - {argument_bool: True, description: "bool 键值对"}
+          - {argument_string: string, description: "string 键值对"}
+
+data:
   launch:
-    - &node_1
-      name: xxx1
-      file: xxx1.launch.py
-    - &node_2
-      name: xxx1
-      file: xxx1.launch.py
-    - &node_3
-      name: xxx1
-      file: xxx1.launch.py
-    - &node_4
-      name: xxx1
-      file: xxx1.launch.py
-    - &node_5
-      name: xxx1
-      file: xxx1.launch.py
-    - &node_6
-      name: xxx1
-      file: xxx1.launch.py
-    - &node_7
-      name: xxx1
-      file: xxx1.launch.py
-    - &node_8
-      name: xxx1
-      file: xxx1.launch.py
-data:                                       # 值约束
-  mode:                                     # 模式
-    - name: mode_A                          # A模式
-      precursor:                            # 前驱模式
-        - {mode: null,      decide: *off_dec}
-      function:                             # 依赖项目
-        - {launch: *node_1, enable: *on1}
-        - {launch: *node_2, enable: *on1}
-        - {launch: *node_3, enable: *on1}
-        - {launch: *node_4, enable: *on2}
-        - {launch: *node_5, enable: *off}
-        - {launch: *node_6, enable: *on2}
-    - name: mode_B
-      precursor:
-        - {mode: mode_A,    decide: *on1_dec}
-      function:
-        - {launch: *node_5, enable: *on2}
-        - {launch: *node_6, enable: *of2}
-        - {launch: *node_7, enable: *on3}
-    - name: mode_C
-      precursor:
-        - {mode: mode_A,    decide: *on2_dec}
-        - {mode: mode_B,    decide: *on2_dec}
-      function:
-        - {launch: *node_6, enable: *on3}
-        - {launch: *node_7, enable: *of3}
-        - {launch: *node_8, enable: *on2}
+    file_name: main.launch.py
+    initiative:   # 主动
+      automatic:    # 自动
+        - {module: *base,             enable: *on}
+        - {module: *base2,            enable: *on}
+      manual:     # 手动
+        - {module: *navigation2,      enable: *on}
+        - {module: *navigation3,      enable: *on}
+        - {module: *navigation4,      enable: *off}
+    passive:      # 被动
+      - {module: *navigation2,        enable: *off}
