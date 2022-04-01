@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(zxing)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -g)
+  add_compile_options(-w -g)
 endif()
 
 # Default to C99
@@ -415,7 +415,7 @@ add_library (${PROJECT_NAME}
     ${QRCODE_FILES}
     ${TEXT_CODEC_FILES}
 )
-message("CMAKE_INSTALL_DIR==${CMAKE_INSTALL_DIR}")
+# message("CMAKE_INSTALL_DIR==${CMAKE_INSTALL_DIR}")
 target_include_directories (${PROJECT_NAME}
     PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
     INTERFACE "$<INSTALL_INTERFACE:include>"
@@ -432,7 +432,7 @@ install (
 
 
 
-message("CMAKE_CURRENT_SOURCE_DIR==${CMAKE_CURRENT_SOURCE_DIR}")
+# message("CMAKE_CURRENT_SOURCE_DIR==${CMAKE_CURRENT_SOURCE_DIR}")
 
 
 target_link_libraries (${PROJECT_NAME} PRIVATE Threads::Threads)
