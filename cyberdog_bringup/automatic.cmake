@@ -137,7 +137,7 @@ function(get_keys _file _key keys_)
     COMMAND shyaml get-value ${_key}
     COMMAND shyaml keys
   OUTPUT_VARIABLE _keys)
-  if(${_keys} STREQUAL "")
+  if("${_keys}" STREQUAL "")
     message("┏━> 获取 ${_key} 失败\n┗━> ${_file} 下无 ${_key} 参数(${_keys})，请检查")
     return()
   endif()
