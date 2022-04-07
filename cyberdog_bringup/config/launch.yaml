@@ -1,0 +1,50 @@
+type:
+  xxx: &Xxx true
+
+data:
+  bringup_test:
+    file_name: bringup_test.launch.py
+    arguments:
+      - {argument_int: 0, description: "int 键值对"}
+      - {argument_float: 0.1, description: "float 键值对"}
+      - {argument_bool: True, description: "bool 键值对"}
+      - {argument_string: string, description: "string 键值对"}
+    param:
+      cmd: null
+      name: null
+      cwd: null
+      env: null
+      additional_env: null
+      shell: null
+      sigterm_timeout: null
+      sigkill_timeout: null
+      emulate_tty: null
+      prefix: null
+      output: screen
+      output_format: null
+      log_cmd: null
+      on_exit: null
+      respawn: true
+      respawn_delay:  1
+    events:
+      handled:
+        shutdown_process: null
+        signal_process: null
+        process_stdin: null
+        shutdown: null
+      emitted:
+        process_started: null
+        process_exited: null
+        process_stdout: null
+        process_stderr: null
+    nodes: [bringup_test]
+
+  #------------------------------------------------------------->
+  base:
+    file_name: base.launch.py
+    nodes: [connector, device_manager, sensor_manager, motion_manager]
+
+  #------------------------------------------------------------->
+  navigation2:
+    package_name: navigation2
+    file_name: navigation2.launch.py

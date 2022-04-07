@@ -1,0 +1,3 @@
+cyberdog_bringup_test:
+  ros__parameters:
+    cyberdog_bringup_test_parameter_int: 2
