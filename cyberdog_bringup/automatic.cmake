@@ -137,7 +137,7 @@ function(get_keys _file _key keys_)
     COMMAND shyaml get-value ${_key}
     COMMAND shyaml keys
   OUTPUT_VARIABLE _keys)
-  string(REPLACE "\n" ";" _keys_list ${_keys})
+  string(REPLACE "\n" ";" _keys_list "${_keys}")
   set(${keys_} ${_keys_list} PARENT_SCOPE)
 endfunction()
 
@@ -149,7 +149,7 @@ function(get_sequence _file _key sequence_)
     COMMAND cat ${PROJECT_SOURCE_DIR}/config/${_file}
     COMMAND shyaml get-values ${_key}
   OUTPUT_VARIABLE _sequence)
-  string(REPLACE "\n" ";" _sequence_list ${_sequence})
+  string(REPLACE "\n" ";" _sequence_list "${_sequence}")
   set(${sequence_} ${_sequence_list} PARENT_SCOPE)
 endfunction()
 
