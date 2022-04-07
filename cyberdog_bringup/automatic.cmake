@@ -39,22 +39,22 @@ set(yaml_bool_type "bool")
 set(yaml_sequence_type "sequence")
 
 #
-# 功能说明: 范端 shyaml 工具能力
+# 功能说明: 检测 environment 工具能力
 #
-function(judge_shyaml is_install_)
+function(judge_environment is_ok_)
   cmake_parse_arguments(_ARG "LOG" "" "" ${ARGN})
-  set(${is_install_} FALSE PARENT_SCOPE)
+  set(${is_ok_} FALSE PARENT_SCOPE)
   execute_process(
     COMMAND shyaml -V
   OUTPUT_VARIABLE _shyaml_info)
   string(REPLACE "\n" ";" _shyaml_info "${_shyaml_info}")
   if("${_shyaml_info}" STREQUAL "")
     set(_error_info "-bash: shyaml: command not found")
-    message("┏━> 检测 shyaml 失败\n┠─> ${_error_info}\n")
+    message("┏━> 检测 cyberdog_bringup 工作环境失败\n┠─> ${_error_info}\n")
     message("┗━> shyaml 尚未安装，请安装(python3 -m pip install shyaml)")
     return()
   endif()
-  set(${is_install_} TRUE PARENT_SCOPE)
+  set(${is_ok_} TRUE PARENT_SCOPE)
   if(_ARG_LOG)
     message("┠─>: 当前 shyaml 信息: ${_shyaml_info}")
   endif()
@@ -766,8 +766,8 @@ function(automatically_generate_launch_files)
     message("\n┏━>: 开始依据 ${PROJECT_SOURCE_DIR}/config/*.yaml 文件生成 launch 文件...")
     set(_ARG_LOG_ "LOG")
   endif()
-  judge_shyaml(_is_install ${_ARG_LOG_})
-  if(NOT ${_is_install})
+  judge_environment(_is_ok ${_ARG_LOG_})
+  if(NOT ${_is_ok})
     return()
   endif()
   if(_ARG_NODE)
