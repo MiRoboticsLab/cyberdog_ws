@@ -1,0 +1,6 @@
+type:
+  xxx: &Xxx true
+
+data:
+  file_name: main.launch.py
+  launchs: [base]

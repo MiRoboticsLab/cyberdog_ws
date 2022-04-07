@@ -15,31 +15,14 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-include(automatic.cmake)
-automatically_generate_launch_files()
-
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(cyberdog_common REQUIRED)
+include(automatic.cmake)
+automatically_generate_launch_files(NODE)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
-ament_target_dependencies(${PROJECT_NAME}
-  rclcpp
-  std_msgs
-  cyberdog_common)
-
-# target_link_libraries(${PROJECT_NAME}
-#   ${cyberdog_log_LIBRARIES})
-
-install(TARGETS ${PROJECT_NAME}
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(DIRECTORY params DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY parameters DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
