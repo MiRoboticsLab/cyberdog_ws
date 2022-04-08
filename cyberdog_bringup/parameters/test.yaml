@@ -1,3 +1,0 @@
-test:
-  ros__parameters:
-    cyberdog_bringup_parameter_int: 1
