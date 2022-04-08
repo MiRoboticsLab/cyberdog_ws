@@ -24,7 +24,8 @@ set(back_bracket  "_BACK_BRACKET_")
 
 set(include_label  "<include>")
 set(include_package_name ${PROJECT_NAME})
-set(include_config_path "parameters")
+set(include_config_path "config")
+set(include_automatic_path "automatic")
 
 set(yaml_bringup "bringup.yaml")
 set(yaml_launch "launch.yaml")
@@ -122,7 +123,7 @@ endfunction()
 #
 function(get_key_type _file _key value_)
   execute_process(
-    COMMAND cat ${PROJECT_SOURCE_DIR}/config/${_file}
+    COMMAND cat ${PROJECT_SOURCE_DIR}/${include_automatic_path}/${_file}
     COMMAND shyaml get-type ${_key}
   OUTPUT_VARIABLE _type)
   set(${value_} ${_type} PARENT_SCOPE)
@@ -133,7 +134,7 @@ endfunction()
 #
 function(get_length _file _key value_)
   execute_process(
-    COMMAND cat ${PROJECT_SOURCE_DIR}/config/${_file}
+    COMMAND cat ${PROJECT_SOURCE_DIR}/${include_automatic_path}/${_file}
     COMMAND shyaml get-length ${_key}
   OUTPUT_VARIABLE _length)
   set(${value_} ${_length} PARENT_SCOPE)
@@ -144,7 +145,7 @@ endfunction()
 #
 function(get_value _file _key value_)
   execute_process(
-    COMMAND cat ${PROJECT_SOURCE_DIR}/config/${_file}
+    COMMAND cat ${PROJECT_SOURCE_DIR}/${include_automatic_path}/${_file}
     COMMAND shyaml get-value ${_key}
   OUTPUT_VARIABLE _value)
   set(${value_} ${_value} PARENT_SCOPE)
@@ -155,7 +156,7 @@ endfunction()
 #
 function(get_keys _file _key keys_)
   execute_process(
-    COMMAND cat ${PROJECT_SOURCE_DIR}/config/${_file}
+    COMMAND cat ${PROJECT_SOURCE_DIR}/${include_automatic_path}/${_file}
     COMMAND shyaml get-value ${_key}
     COMMAND shyaml keys
   OUTPUT_VARIABLE _keys)
@@ -172,7 +173,7 @@ endfunction()
 #
 function(get_sequence _file _key sequence_)
   execute_process(
-    COMMAND cat ${PROJECT_SOURCE_DIR}/config/${_file}
+    COMMAND cat ${PROJECT_SOURCE_DIR}/${include_automatic_path}/${_file}
     COMMAND shyaml get-values ${_key}
   OUTPUT_VARIABLE _sequence)
   string(REPLACE "\n" ";" _sequence_list "${_sequence}")
@@ -463,6 +464,8 @@ macro(definition_node _target_node)
       definition_node_remappings(${_target_node})
     elseif(${_key} STREQUAL "arguments")
       definition_argument(${yaml_node} ${_target_node} "arguments")
+    else()
+      list(APPEND _launch "${_tab_3}${_key}=${_key_value},\n")
     endif()
   endforeach()
   list(APPEND _launch "${_tab_2}),\n")
@@ -763,7 +766,7 @@ function(automatically_generate_launch_files)
     message(FATAL_ERROR "lcmidl_generate_interfaces() 必须在 ament_package() 之前调用")
   endif()
   if(_ARG_LOG)
-    message("\n┏━>: 开始依据 ${PROJECT_SOURCE_DIR}/config/*.yaml 文件生成 launch 文件...")
+    message("\n┏━>: 开始依据 ${PROJECT_SOURCE_DIR}/${include_automatic_path}/*.yaml 文件生成 launch 文件...")
     set(_ARG_LOG_ "LOG")
   endif()
   judge_environment(_is_ok ${_ARG_LOG_})

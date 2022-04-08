@@ -1,0 +1,32 @@
+/**:
+  ros__parameters:
+    cyberdog_bringup_parameter_int0: 10
+
+/*:
+  bringup_test:
+    ros__parameters:
+      cyberdog_bringup_parameter_int1: 11
+
+cyberdog:
+  bringup_test:
+    ros__parameters:
+      cyberdog_bringup_parameter_int2: 12
+
+/cyberdog/bringup_test:
+  ros__parameters:
+    cyberdog_bringup_parameter_int3: 13
+
+/**:
+  ros__parameters:
+    parameter:
+      parameters_bool: True
+      parameters_int: 1
+      parameters_double: 0.123
+      parameters_string0: string_message
+      parameters_string1: 'string message'
+      parameters_string2: "string message"
+      vector:
+        parameters_int_vector: [0,1,2,3,4,5,6,7,8,9]
+        parameters_double_vector: [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+        parameters_bool_vector: [True,False,True,False,True,False,True,False,True,False]
+        parameters_string_vector: [string,"string",'string',"string string",'string string']

@@ -20,10 +20,10 @@ data:
       - {parameters_int_vector: [0,1,2,3,4,5,6,7,8,9],  description: "int 键值对(数组)"}
       - {parameters_double_vector: [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9],  description: "double 键值对(数组)"}
       - {parameters_bool_vector: [True,False,True,False,True,False,True,False,True,False],  description: "bool 键值对(数组)"}
-      - {parameters_string_vector: [string,"string",'string',"string string",'string string',],  description: "string 键值对(数组)"}
+      - {parameters_string_vector: [string,"string",'string',"string string",'string string'],  description: "string 键值对(数组)"}
       - {parameters_yaml: config.yaml,        description: "传入参数文件名称，由程序内部自行解析"}
       - {<include>: test.yaml,                description: "加载 cyberdog_bringup 包下参数文件内参数"}
-      - {<include>: {package_name: cyberdog_bringup_test, config_path: parameters, yaml_name: config.yaml}, description: "加载 cyberdog_bringup_test 包参数文件内参数"}
+      - {<include>: {package_name: cyberdog_bringup_test, config_path: config, yaml_name: config.yaml}, description: "加载 cyberdog_bringup_test 包参数文件内参数"}
     remappings:
       - {from: xxx1_topic,          to: xxx2_topic}
       - {from: xxx1_topic,          to: xxx3_topic}

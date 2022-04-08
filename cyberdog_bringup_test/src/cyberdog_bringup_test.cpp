@@ -79,7 +79,7 @@ public:
     //     message_size_ *= 1024uL;
     //   }
     // }
-
+    // 申明 node.yaml 配置参数
     this->declare_parameter("simulator", false);
     this->declare_parameter("parameters_bool", false);
     this->declare_parameter("parameters_int", 0);
@@ -92,6 +92,26 @@ public:
     this->declare_parameter("parameters_int_vector", std::vector<int64_t>{});
     this->declare_parameter("parameters_double_vector", std::vector<double>{});
     this->declare_parameter("parameters_string_vector", std::vector<std::string>{});
+    // 申明 cyberdog_bringup_test 包下 配置参数
+    this->declare_parameter("cyberdog_bringup_test_parameter_int0", 0);
+    this->declare_parameter("cyberdog_bringup_test_parameter_int1", 0);
+    this->declare_parameter("cyberdog_bringup_test_parameter_int2", 0);
+    this->declare_parameter("cyberdog_bringup_test_parameter_int3", 0);
+    // 申明 cyberdog_bringup 包下 配置参数
+    this->declare_parameter("cyberdog_bringup_parameter_int0", 0);
+    this->declare_parameter("cyberdog_bringup_parameter_int1", 0);
+    this->declare_parameter("cyberdog_bringup_parameter_int2", 0);
+    this->declare_parameter("cyberdog_bringup_parameter_int3", 0);
+    this->declare_parameter("parameter.parameters_bool", false);
+    this->declare_parameter("parameter.parameters_int", 0);
+    this->declare_parameter("parameter.parameters_double", 0.0);
+    this->declare_parameter("parameter.parameters_string0", "null");
+    this->declare_parameter("parameter.parameters_string1", "null");
+    this->declare_parameter("parameter.parameters_string2", "null");
+    this->declare_parameter("parameter.vector.parameters_bool_vector", std::vector<bool>{});
+    this->declare_parameter("parameter.vector.parameters_int_vector", std::vector<int64_t>{});
+    this->declare_parameter("parameter.vector.parameters_double_vector", std::vector<double>{});
+    this->declare_parameter("parameter.vector.parameters_string_vector", std::vector<std::string>{});
 
     auto parameters_client = std::make_shared<rclcpp::SyncParametersClient>(this);
     while (!parameters_client->wait_for_service(1s)) {
@@ -132,7 +152,25 @@ public:
         "parameters_bool_vector",
         "parameters_int_vector",
         "parameters_double_vector",
-        "parameters_string_vector"
+        "parameters_string_vector",
+        "cyberdog_bringup_test_parameter_int0",
+        "cyberdog_bringup_test_parameter_int1",
+        "cyberdog_bringup_test_parameter_int2",
+        "cyberdog_bringup_test_parameter_int3",
+        "cyberdog_bringup_parameter_int0",
+        "cyberdog_bringup_parameter_int1",
+        "cyberdog_bringup_parameter_int2",
+        "cyberdog_bringup_parameter_int3",
+        "parameter.parameters_bool", 
+        "parameter.parameters_int", 
+        "parameter.parameters_double", 
+        "parameter.parameters_string0",
+        "parameter.parameters_string1",
+        "parameter.parameters_string2",
+        "parameter.vector.parameters_bool_vector",
+        "parameter.vector.parameters_int_vector",
+        "parameter.vector.parameters_double_vector",
+        "parameter.vector.parameters_string_vector"
       }))
     {
       msg << "\nParameter name: " << parameter.get_name();
@@ -140,7 +178,7 @@ public:
         parameter.value_to_string();
     }
     INFO_STREAM("参数属性:" << msg.str().c_str());
-
+    // 加载 node.yaml 配置参数
     this->get_parameter("simulator",                this->_simulator);
     this->get_parameter("parameters_bool",          this->_parameters_bool);
     this->get_parameter("parameters_int",           this->_parameters_int);
@@ -153,32 +191,67 @@ public:
     this->get_parameter("parameters_int_vector",    this->_parameters_int_vector);
     this->get_parameter("parameters_double_vector", this->_parameters_double_vector);
     this->get_parameter("parameters_string_vector", this->_parameters_string_vector);
-
-    this->_include_cyberdog_bringup_parameter_int = this->declare_parameter("cyberdog_bringup_parameter_int", 0);
-    this->_include_cyberdog_bringup_test_parameter_int = this->declare_parameter("cyberdog_bringup_test_parameter_int", 0);
-    // this->get_parameter("cyberdog_bringup_parameter_int", this->_include_cyberdog_bringup_parameter_int);
-    // this->get_parameter("config.ros__parameters.cyberdog_bringup_test_parameter_int", this->_include_cyberdog_bringup_test_parameter_int);
+    // 加载 cyberdog_bringup_test 包下 配置参数
+    this->get_parameter("cyberdog_bringup_test_parameter_int0", this->_include_cyberdog_bringup_test_parameter_int0);
+    this->get_parameter("cyberdog_bringup_test_parameter_int1", this->_include_cyberdog_bringup_test_parameter_int1);
+    this->get_parameter("cyberdog_bringup_test_parameter_int2", this->_include_cyberdog_bringup_test_parameter_int2);
+    this->get_parameter("cyberdog_bringup_test_parameter_int3", this->_include_cyberdog_bringup_test_parameter_int3);
+    // 加载 cyberdog_bringup 包下 配置参数
+    this->get_parameter("cyberdog_bringup_parameter_int0", this->_include_cyberdog_bringup_parameter_int0);
+    this->get_parameter("cyberdog_bringup_parameter_int1", this->_include_cyberdog_bringup_parameter_int1);
+    this->get_parameter("cyberdog_bringup_parameter_int2", this->_include_cyberdog_bringup_parameter_int2);
+    this->get_parameter("cyberdog_bringup_parameter_int3", this->_include_cyberdog_bringup_parameter_int3);
+    this->get_parameter("parameter.parameters_bool", this->_include_cyberdog_bringup_parameters_bool);
+    this->get_parameter("parameter.parameters_int", this->_include_cyberdog_bringup_parameters_int);
+    this->get_parameter("parameter.parameters_double", this->_include_cyberdog_bringup_parameters_double);
+    this->get_parameter("parameter.parameters_string0", this->_include_cyberdog_bringup_parameters_string0);
+    this->get_parameter("parameter.parameters_string1", this->_include_cyberdog_bringup_parameters_string1);
+    this->get_parameter("parameter.parameters_string2", this->_include_cyberdog_bringup_parameters_string2);
+    this->get_parameter("parameter.vector.parameters_bool_vector", this->_include_cyberdog_bringup_parameters_bool_vector);
+    this->get_parameter("parameter.vector.parameters_int_vector", this->_include_cyberdog_bringup_parameters_int_vector);
+    this->get_parameter("parameter.vector.parameters_double_vector", this->_include_cyberdog_bringup_parameters_double_vector);
+    this->get_parameter("parameter.vector.parameters_string_vector", this->_include_cyberdog_bringup_parameters_string_vector);
 
     INFO_EXPRESSION(this->_simulator, "simulator = TRUE(开启模拟器模式)");
     INFO_EXPRESSION(!this->_simulator, "simulator = FALSE(关闭模拟器模式)");
-    INFO_STREAM(
+    INFO_STREAM("node.yaml 配置参数" <<
       "\nparameters_bool = " << this->_parameters_bool <<
       "\nparameters_int = " << this->_parameters_int <<
       "\nparameters_double = " << this->_parameters_double <<
       "\nparameters_string0 = " << this->_parameters_string0 <<
       "\nparameters_string1 = " << this->_parameters_string1 <<
       "\nparameters_string2 = " << this->_parameters_string2 <<
-      "\nparameters_yaml = " << this->_parameters_yaml <<
-      "\ncyberdog_bringup_parameter_int = " << this->_include_cyberdog_bringup_parameter_int <<
-      "\ncyberdog_bringup_test_parameter_int = " << this->_include_cyberdog_bringup_test_parameter_int
+      "\nparameters_yaml = " << this->_parameters_yaml
     );
-
     this->info_vector("parameters_bool_vector", this->_parameters_bool_vector);
     this->info_vector("parameters_int_vector", this->_parameters_int_vector);
     this->info_vector("parameters_double_vector", this->_parameters_double_vector);
     this->info_vector("parameters_string_vector", this->_parameters_string_vector);
 
+    INFO_STREAM("cyberdog_bringup_test 包下 配置参数" <<
+      "\ncyberdog_bringup_test_parameter_int0 = " << this->_include_cyberdog_bringup_test_parameter_int0 <<
+      "\ncyberdog_bringup_test_parameter_int1 = " << this->_include_cyberdog_bringup_test_parameter_int1 <<
+      "\ncyberdog_bringup_test_parameter_int2 = " << this->_include_cyberdog_bringup_test_parameter_int2 <<
+      "\ncyberdog_bringup_test_parameter_int3 = " << this->_include_cyberdog_bringup_test_parameter_int3
+    );
 
+    INFO_STREAM("cyberdog_bringup 包下 配置参数" <<
+      "\ncyberdog_bringup_parameter_int0 = " << this->_include_cyberdog_bringup_parameter_int0 <<
+      "\ncyberdog_bringup_parameter_int1 = " << this->_include_cyberdog_bringup_parameter_int1 <<
+      "\ncyberdog_bringup_parameter_int2 = " << this->_include_cyberdog_bringup_parameter_int2 <<
+      "\ncyberdog_bringup_parameter_int3 = " << this->_include_cyberdog_bringup_parameter_int3 <<
+      "\nparameter.parameters_bool = " << this->_include_cyberdog_bringup_parameters_bool <<
+      "\nparameter.parameters_int = " << this->_include_cyberdog_bringup_parameters_int <<
+      "\nparameter.parameters_double = " << this->_include_cyberdog_bringup_parameters_double <<
+      "\nparameter.parameters_string0 = " << this->_include_cyberdog_bringup_parameters_string0 <<
+      "\nparameter.parameters_string1 = " << this->_include_cyberdog_bringup_parameters_string1 <<
+      "\nparameter.parameters_string2 = " << this->_include_cyberdog_bringup_parameters_string2
+    );
+
+    this->info_vector("parameter.vector.parameters_bool_vector", this->_include_cyberdog_bringup_parameters_bool_vector);
+    this->info_vector("parameter.vector.parameters_int_vector", this->_include_cyberdog_bringup_parameters_int_vector);
+    this->info_vector("parameter.vector.parameters_double_vector", this->_include_cyberdog_bringup_parameters_double_vector);
+    this->info_vector("parameter.vector.parameters_string_vector", this->_include_cyberdog_bringup_parameters_string_vector);
   }
 
 private:
@@ -190,16 +263,31 @@ private:
   std::string _parameters_string1 {""}; // string 键值对(多string):单引号方式约束
   std::string _parameters_string2 {""}; // string 键值对(多string):双引号方式约束
   std::string _parameters_yaml {""};    // 传入参数文件名称，由程序内部自行解析
-  int         _include_cyberdog_bringup_parameter_int {0};      // int 参数
-  int         _include_cyberdog_bringup_test_parameter_int {0}; // int 参数
   std::vector<bool>         _parameters_bool_vector;    // bool 键值对(数组)
   std::vector<int64_t>      _parameters_int_vector;     // int 键值对(数组)
   std::vector<double>       _parameters_double_vector;   // double 键值对(数组)
   std::vector<std::string>  _parameters_string_vector;  // string 键值对(数组)
+  int         _include_cyberdog_bringup_test_parameter_int0 {0}; // int 参数
+  int         _include_cyberdog_bringup_test_parameter_int1 {0}; // int 参数
+  int         _include_cyberdog_bringup_test_parameter_int2 {0}; // int 参数
+  int         _include_cyberdog_bringup_test_parameter_int3 {0}; // int 参数
+  int         _include_cyberdog_bringup_parameter_int0 {0};      // int 参数
+  int         _include_cyberdog_bringup_parameter_int1 {0};      // int 参数
+  int         _include_cyberdog_bringup_parameter_int2 {0};      // int 参数
+  int         _include_cyberdog_bringup_parameter_int3 {0};      // int 参数
+  bool        _include_cyberdog_bringup_parameters_bool {false}; // bool 参数
+  int         _include_cyberdog_bringup_parameters_int {0};      // int 参数
+  double      _include_cyberdog_bringup_parameters_double {0.0}; // float 参数
+  std::string _include_cyberdog_bringup_parameters_string0 {""}; // string 键值对(单string):无引号方式约束
+  std::string _include_cyberdog_bringup_parameters_string1 {""}; // string 键值对(多string):单引号方式约束
+  std::string _include_cyberdog_bringup_parameters_string2 {""}; // string 键值对(多string):双引号方式约束
+  std::vector<bool>         _include_cyberdog_bringup_parameters_bool_vector;    // bool 键值对(数组)
+  std::vector<int64_t>      _include_cyberdog_bringup_parameters_int_vector;     // int 键值对(数组)
+  std::vector<double>       _include_cyberdog_bringup_parameters_double_vector;   // double 键值对(数组)
+  std::vector<std::string>  _include_cyberdog_bringup_parameters_string_vector;  // string 键值对(数组)
 
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
-
 
   template<typename T>
   void info_vector(std::string _msg, const std::vector<T> & _vector) {
