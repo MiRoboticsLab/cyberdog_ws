@@ -19,7 +19,7 @@ find_package(ament_cmake_python REQUIRED)
 include(automatic.cmake)
 automatically_generate_launch_files(NODE)
 
-install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY bringup config DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

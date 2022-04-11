@@ -81,6 +81,7 @@ function(get_launch_data file_)
   "# limitations under the License.\n"
   "\n"
   "import os\n"
+  "import sys\n"
   "import platform\n"
   "from launch import LaunchDescription\n"
   "from launch.actions import LogInfo\n"
@@ -88,6 +89,11 @@ function(get_launch_data file_)
   "from launch.substitutions import EnvironmentVariable\n"
   "from launch.substitutions import LaunchConfiguration\n"
   "from ament_index_python.packages import get_package_share_directory\n"
+  "\n"
+  "sys.path.append(r'${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/bringup')\n"
+  "from bringup import preprocessing\n"
+  "from bringup import get_namespace\n"
+  "preprocessing()\n"
   "\n"
   PARENT_SCOPE
   )
@@ -447,13 +453,16 @@ macro(definition_node _target_node)
   endif()
   list(APPEND _launch "${_tab_2}Node(\n")
   get_keys(${yaml_node} "data.${_target_node}" _target_node_keys)
+  set(set_namespace FALSE)
   foreach(_key IN LISTS _target_node_keys)
     get_value(${yaml_node} "data.${_target_node}.${_key}" _key_value)
     if(${_key_value} STREQUAL "None")
       continue()  # 节点属性为空，忽略
     endif()
-    if((${_key} STREQUAL "namespace") OR
-        (${_key} STREQUAL "package") OR
+    if(${_key} STREQUAL "namespace")
+      list(APPEND _launch "${_tab_3}${_key}='${_key_value}',\n")
+      set(set_namespace TRUE)
+    elseif((${_key} STREQUAL "package") OR
         (${_key} STREQUAL "executable") OR
         (${_key} STREQUAL "name") OR
         (${_key} STREQUAL "exec_name"))
@@ -468,6 +477,9 @@ macro(definition_node _target_node)
       list(APPEND _launch "${_tab_3}${_key}=${_key_value},\n")
     endif()
   endforeach()
+  if(NOT ${set_namespace})
+    list(APPEND _launch "${_tab_3}namespace = get_namespace(),\n")
+  endif()
   list(APPEND _launch "${_tab_2}),\n")
 endmacro()
 

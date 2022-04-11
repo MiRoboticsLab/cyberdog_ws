@@ -40,7 +40,18 @@ public:
   TestNode()
   : Node("cyberdog_bringup_test")
   {
-    INFO("cyberdog_bringup_test ...");
+    INFO_STREAM("当前 node 信息:" <<
+      "\nname = " << this->get_name() <<
+      "\nnamespace = " << this->get_namespace() <<
+      "\nfully qualified name = " << this->get_fully_qualified_name()
+    );
+
+    auto options = rclcpp::NodeOptions();
+    INFO_STREAM("当前 options 信息:" <<
+      "\nuse_global_arguments = " << options.use_global_arguments() <<
+      "\nget_rcl_node_options()->use_global_arguments = " << options.get_rcl_node_options()->use_global_arguments
+    );
+    
     const std::vector<std::string> & args = this->get_node_options().arguments();
     INFO_STREAM("+++>" << args.size());
     for (size_t i = 0; i < args.size(); i++)

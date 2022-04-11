@@ -36,36 +36,30 @@ data:
 
   #------------------------------------------------------------->
   connector:
-    namespace: *Namespace
     package: connector
     executable: connector
 
   #------------------------------------------------------------->
   device_manager:
-    namespace: *Namespace
     package: device_manager
     executable: device_manager
 
   #------------------------------------------------------------->
   sensor_manager:
-    namespace: *Namespace
     package: sensor_manager
     executable: sensor_manager
 
   #------------------------------------------------------------->
   cyberdog_manager:
-    namespace: *Namespace
     package: cyberdog_manager
     executable: cyberdog_manager
 
   #------------------------------------------------------------->
   motion_manager:
-    namespace: *Namespace
     package: black_box
     executable: black_box
 
   #------------------------------------------------------------->
   motion_manager:
-    namespace: *Namespace
     package: motion_manager
     executable: motion_manager
