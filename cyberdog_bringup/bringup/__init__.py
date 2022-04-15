@@ -14,8 +14,8 @@
 
 """Main entry point for the `bringup` package."""
 
-from .bringup import preprocessing
 from .bringup import get_namespace
+from .bringup import preprocessing
 
 
 __all__ = [

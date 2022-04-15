@@ -16,9 +16,9 @@ import os
 import re
 import sys
 import time
-import uuid
-import socket
 import getopt
+import socket
+import uuid
 import platform
 
 
@@ -56,10 +56,10 @@ of the current program before starting it.
 
         user_env_var = 'USERNAME' if platform.system() == 'Windows' else 'USER'
         user = os.environ[user_env_var]
-        print('[', user, '] [mi] Preprocessing(', str(sys.argv[4:]), ")...")
+        print('[', user, '] [mi] Preprocessing(', str(sys.argv[4:]), ')...')
         for now_arg in sys.argv[4:]:
             if re.match(r'^(mi:=)+.*$', now_arg):
-                arg_str = re.sub(r'^(mi:=)+', "", now_arg)
+                arg_str = re.sub(r'^(mi:=)+', '', now_arg)
                 arg_list = arg_str.split()
                 opts, args = getopt.getopt(
                     arg_list, '-h-v-r-d:',
@@ -82,7 +82,7 @@ of the current program before starting it.
                         while True:
                             find_cmd_output = os.popen(find_cmd, 'r')
                             size_int = int(
-                                re.sub(r'[^0-9]+', "", find_cmd_output.read()))
+                                re.sub(r'[^0-9]+', '', find_cmd_output.read()))
                             if size_int > 3:
                                 kill_cmd_output = os.popen(kill_cmd, 'r')
                                 print('[', user, '] [mi] Stopping[',
@@ -109,7 +109,7 @@ of the current program before starting it.
 #
 def get_namespace():
     mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
-    mac_address = "_".join([mac[e:e + 2] for e in range(0, 11, 2)])
+    mac_address = '_'.join([mac[e:e + 2] for e in range(0, 11, 2)])
     hostname = socket.getfqdn(socket.gethostname())
-    namespace = hostname + "_" + mac_address
+    namespace = hostname + '_' + mac_address
     return namespace
