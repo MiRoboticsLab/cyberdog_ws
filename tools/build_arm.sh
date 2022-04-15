@@ -24,7 +24,7 @@ vcs import . < cyberdog_ws/cyberdog.repos
 cd ..
 
 echo -n "build cyberdog ros2 applications source code"
-colcon build --merge-install --install-base /opt/ros2/cyberdog --parallel-workers 40 # --packages-select=params
+colcon build --merge-install --install-base /opt/ros2/cyberdog --parallel-workers 40  --packages-select cyberdog_gridmap_costmap_plugin navigation_bringup navigation_interfaces
 
 echo -n "get commit id sum of all repos"
 cd /
