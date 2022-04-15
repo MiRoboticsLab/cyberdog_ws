@@ -14,10 +14,14 @@
 
 set(_DEBUG_ false)
 
-set(_tab_1 "\t")
-set(_tab_2 "\t\t")
-set(_tab_3 "\t\t\t")
-set(_tab_4 "\t\t\t\t")
+# set(_tab_1 "\t")
+# set(_tab_2 "\t\t")
+# set(_tab_3 "\t\t\t")
+# set(_tab_4 "\t\t\t\t")
+set(_tab_1 "    ")
+set(_tab_2 "        ")
+set(_tab_3 "            ")
+set(_tab_4 "                ")
 
 set(front_bracket "_FRONT_BRACKET_")
 set(back_bracket  "_BACK_BRACKET_")
@@ -81,6 +85,7 @@ function(get_launch_data file_)
   "# limitations under the License.\n"
   "\n"
   "import os\n"
+  "import sys\n"
   "import platform\n"
   "from launch import LaunchDescription\n"
   "from launch.actions import LogInfo\n"
@@ -88,6 +93,11 @@ function(get_launch_data file_)
   "from launch.substitutions import EnvironmentVariable\n"
   "from launch.substitutions import LaunchConfiguration\n"
   "from ament_index_python.packages import get_package_share_directory\n"
+  "\n"
+  "sys.path.append(r'${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/bringup')\n"
+  "from bringup import preprocessing\n"
+  "from bringup import get_namespace\n"
+  "preprocessing()\n"
   "\n"
   PARENT_SCOPE
   )
@@ -447,13 +457,16 @@ macro(definition_node _target_node)
   endif()
   list(APPEND _launch "${_tab_2}Node(\n")
   get_keys(${yaml_node} "data.${_target_node}" _target_node_keys)
+  set(set_namespace FALSE)
   foreach(_key IN LISTS _target_node_keys)
     get_value(${yaml_node} "data.${_target_node}.${_key}" _key_value)
     if(${_key_value} STREQUAL "None")
       continue()  # 节点属性为空，忽略
     endif()
-    if((${_key} STREQUAL "namespace") OR
-        (${_key} STREQUAL "package") OR
+    if(${_key} STREQUAL "namespace")
+      list(APPEND _launch "${_tab_3}${_key}='${_key_value}',\n")
+      set(set_namespace TRUE)
+    elseif((${_key} STREQUAL "package") OR
         (${_key} STREQUAL "executable") OR
         (${_key} STREQUAL "name") OR
         (${_key} STREQUAL "exec_name"))
@@ -468,6 +481,9 @@ macro(definition_node _target_node)
       list(APPEND _launch "${_tab_3}${_key}=${_key_value},\n")
     endif()
   endforeach()
+  if(NOT ${set_namespace})
+    list(APPEND _launch "${_tab_3}namespace=get_namespace(),\n")
+  endif()
   list(APPEND _launch "${_tab_2}),\n")
 endmacro()
 
@@ -602,21 +618,21 @@ endfunction()
 #
 # 功能说明: 判断 bringup
 #
-function(judge_bringup is_bringup_ launch_name_)
+function(judge_bringup _target_bringup is_bringup_ launch_name_)
   if(_DEBUG_)
     message("┠─>: 正在判断 bringup...")
   endif()
   set(${is_bringup_} FALSE PARENT_SCOPE)
   set(${launch_name_} "null" PARENT_SCOPE)
-  get_keys(${yaml_bringup} "data" _bringup_data_keys)
+  get_keys(${yaml_bringup} "${_target_bringup}" _bringup_data_keys)
   list(FIND _bringup_data_keys "file_name" _file_name_index)
   if(${_file_name_index} LESS 0)
-    message("┏━> 退出当前编译\n┗━> ${yaml_bringup} 无 file_name 参数，请检查")
+    message("┏━> 退出当前编译\n┗━> ${yaml_bringup} 下 ${_target_bringup} 无 file_name 参数，请检查")
     return()
   endif()
-  get_value(${yaml_bringup} "data.file_name" _file_name_value)
+  get_value(${yaml_bringup} "${_target_bringup}.file_name" _file_name_value)
   if(NOT ${_file_name_value} MATCHES ".*(\.py)+$")
-    message("┏━> 退出当前编译\n┗━> ${yaml_bringup} file_name 非 python 格式(*.py)，请检查")
+    message("┏━> 退出当前编译\n┗━> ${yaml_bringup} 下 ${_target_bringup} file_name 非 python 格式(*.py)，请检查")
     return()
   endif()
   set(${launch_name_} ${_file_name_value} PARENT_SCOPE)
@@ -625,9 +641,9 @@ function(judge_bringup is_bringup_ launch_name_)
     message("┏━> 忽略 ${yaml_bringup}\n┗━> 无 launchs 键，无自动生成实体，请检查")
     return()
   endif()
-  get_key_type(${yaml_bringup} "data.launchs" _launchs_type)
+  get_key_type(${yaml_bringup} "${_target_bringup}.launchs" _launchs_type)
   if(NOT ${_launchs_type} STREQUAL ${yaml_sequence_type})
-    message("┏━> 忽略 ${yaml_bringup}\n┗━> launchs 值类型非序列，请检查")
+    message("┏━> 忽略 ${yaml_bringup} 下 ${_target_bringup}\n┗━> launchs 值类型非序列，请检查")
     return()
   endif()
   set(${is_bringup_} TRUE PARENT_SCOPE)
@@ -689,29 +705,36 @@ function(automatically_generate_launch_gather_files)
     message("┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━>")
     message("┠─>: 正在生成 集合launch 文件...")
   endif()
-  judge_bringup(_is_bringup _launch_name)
-  if(NOT ${_is_bringup})
-    return()
+  get_length(${yaml_bringup} "data" _bringup_size)
+  if(${_bringup_size} GREATER 0)
+    math(EXPR _bringup_size "(${_bringup_size}-1)")
+    foreach(_bringup_index RANGE 0 ${_bringup_size} 1)
+      set(target_bringup "data.${_bringup_index}")
+      judge_bringup(${target_bringup} _is_bringup _launch_name)
+      if(NOT ${_is_bringup})
+        return()
+      endif()
+      get_launch_data(_launch)
+      list(APPEND _launch
+      "from launch.actions import IncludeLaunchDescription\n"
+      "from launch.launch_description_sources import PythonLaunchDescriptionSource\n"
+      "\n"
+      "def generate_launch_description():\n"
+      "${_tab_1}user_env_var = 'USERNAME' if platform.system() == 'Windows' else 'USER'\n"
+      "${_tab_1}return LaunchDescription(${front_bracket}\n"
+      "${_tab_2}LogInfo(msg=(EnvironmentVariable(name=user_env_var), ' 正在初始化 launch ...')),\n"
+      )
+      get_sequence(${yaml_bringup} "${target_bringup}.launchs" _launchs_value)
+      foreach(_now_launch IN LISTS _launchs_value)
+        if(_ARG_LOG)
+          message("┠─>: 正在加载 ${_now_launch} launch 信息...")
+        endif()
+        add_launch_meta(${_now_launch})
+      endforeach()
+      list(APPEND _launch "${_tab_1}${back_bracket})\n")
+      generate_launch_file(${_launch_name} ${_launch})
+    endforeach()
   endif()
-  get_launch_data(_launch)
-  list(APPEND _launch
-  "from launch.actions import IncludeLaunchDescription\n"
-  "from launch.launch_description_sources import PythonLaunchDescriptionSource\n"
-  "\n"
-  "def generate_launch_description():\n"
-  "${_tab_1}user_env_var = 'USERNAME' if platform.system() == 'Windows' else 'USER'\n"
-  "${_tab_1}return LaunchDescription(${front_bracket}\n"
-  "${_tab_2}LogInfo(msg=(EnvironmentVariable(name=user_env_var), ' 正在初始化 launch ...')),\n"
-  )
-  get_sequence(${yaml_bringup} "data.launchs" _launchs_value)
-  foreach(_now_launch IN LISTS _launchs_value)
-    if(_ARG_LOG)
-      message("┠─>: 正在加载 ${_now_launch} launch 信息...")
-    endif()
-    add_launch_meta(${_now_launch})
-  endforeach()
-  list(APPEND _launch "${_tab_1}${back_bracket})\n")
-  generate_launch_file(${_launch_name} ${_launch})
 endfunction()
 
 #

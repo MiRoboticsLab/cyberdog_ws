@@ -45,6 +45,11 @@ data:
     nodes: [connector, device_manager, sensor_manager, motion_manager]
 
   #------------------------------------------------------------->
+  sim_base:
+    file_name: sim_base.launch.py
+    nodes: [connector, sim_device_manager, sim_sensor_manager, motion_manager]
+
+  #------------------------------------------------------------->
   navigation2:
     package_name: navigation2
     file_name: navigation2.launch.py
