@@ -15,8 +15,8 @@
 import getopt
 import os
 import re
-import sys
 import platform
+import sys
 import socket
 import time
 import uuid
