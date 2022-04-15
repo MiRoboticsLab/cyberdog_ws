@@ -15,11 +15,11 @@
 import os
 import re
 import sys
-import time
 import getopt
+import time
 import socket
-import uuid
 import platform
+import uuid
 
 
 #
