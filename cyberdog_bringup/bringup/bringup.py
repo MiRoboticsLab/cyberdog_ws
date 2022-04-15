@@ -13,10 +13,10 @@
 # limitations under the License.
 
 import getopt
-import platform
 import os
-import socket
+import platform
 import re
+import socket
 import sys
 import time
 import uuid
