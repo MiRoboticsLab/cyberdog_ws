@@ -2,5 +2,7 @@ type:
   xxx: &Xxx true
 
 data:
-  file_name: main.launch.py
-  launchs: [base]
+  - file_name: main.launch.py
+    launchs: [base]
+  - file_name: simulator.launch.py
+    launchs: [sim_base]
