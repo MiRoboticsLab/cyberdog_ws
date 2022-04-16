@@ -21,3 +21,6 @@ motion/
 sensors/
 utils/
 
+# examples and tests
+examples/
+
