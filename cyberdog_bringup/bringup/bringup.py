@@ -112,4 +112,5 @@ def get_namespace():
     mac_address = '_'.join([mac[e:e + 2] for e in range(0, 11, 2)])
     hostname = socket.getfqdn(socket.gethostname())
     namespace = hostname + '_' + mac_address
+    namespace = re.sub('[^0-9a-zA-Z]+', '_', namespace)
     return namespace
