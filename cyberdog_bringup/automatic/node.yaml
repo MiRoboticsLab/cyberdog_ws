@@ -68,6 +68,11 @@ data:
     executable: black_box
 
   #------------------------------------------------------------->
+  cyberdog_wifi:
+    package: cyberdog_wifi
+    executable: cyberdog_wifi
+
+  #------------------------------------------------------------->
   motion_manager:
     package: motion_manager
     executable: motion_manager
