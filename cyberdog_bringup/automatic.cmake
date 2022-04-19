@@ -94,7 +94,7 @@ function(get_launch_data file_)
   "from launch.substitutions import LaunchConfiguration\n"
   "from ament_index_python.packages import get_package_share_directory\n"
   "\n"
-  "sys.path.append(r'${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/bringup')\n"
+  "sys.path.append(os.path.join(get_package_share_directory('${PROJECT_NAME}'), 'bringup'))\n"
   "from bringup import preprocessing\n"
   "from bringup import get_namespace\n"
   "preprocessing()\n"
