@@ -78,6 +78,16 @@ data:
     executable: motion_manager
 
   #------------------------------------------------------------->
+  cyberdog_grpc:
+    package: cyberdog_grpc
+    executable: app_server
+
+  #------------------------------------------------------------->
+  sim_mr813_controller:
+    package: motion_action
+    executable: test_as_controller
+
+  #------------------------------------------------------------->
   sim_device_manager:
     package: device_manager
     executable: device_manager

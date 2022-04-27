@@ -42,12 +42,12 @@ data:
   #------------------------------------------------------------->
   base:
     file_name: base.launch.py
-    nodes: [connector, device_manager, sensor_manager, motion_manager]
+    nodes: [connector, device_manager, sensor_manager, motion_manager, cyberdog_grpc]
 
   #------------------------------------------------------------->
   sim_base:
     file_name: sim_base.launch.py
-    nodes: [connector, sim_device_manager, sim_sensor_manager, motion_manager]
+    nodes: [connector, sim_device_manager, sim_sensor_manager, motion_manager, cyberdog_grpc, sim_mr813_controller]
 
   #------------------------------------------------------------->
   navigation2:
