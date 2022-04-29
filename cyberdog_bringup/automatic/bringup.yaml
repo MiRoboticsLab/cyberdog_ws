@@ -3,6 +3,6 @@ type:
 
 data:
   - file_name: main.launch.py
-    launchs: [base]
+    launchs: [base,navigation_bringup]
   - file_name: simulator.launch.py
-    launchs: [sim_base]
+    launchs: [sim_base,navigation_bringup]
