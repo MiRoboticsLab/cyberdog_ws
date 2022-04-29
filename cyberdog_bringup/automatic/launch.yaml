@@ -50,6 +50,6 @@ data:
     nodes: [connector, sim_device_manager, sim_sensor_manager, motion_manager, cyberdog_grpc, sim_mr813_controller]
 
   #------------------------------------------------------------->
-  navigation2:
-    package_name: navigation2
-    file_name: navigation2.launch.py
+  navigation_bringup:
+    package_name: navigation_bringup
+    file_name: navigation.launch.py
