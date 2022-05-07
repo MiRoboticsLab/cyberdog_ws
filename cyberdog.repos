@@ -27,3 +27,7 @@ repositories:
     type: git
     url: git@git.n.xiaomi.com:MiRoboticsLab/rop/utils.git
     version: dev
+  cyberdog_nav2:
+    type: git
+    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/cyberdog_nav2.git
+    version: dev

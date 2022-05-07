@@ -20,6 +20,7 @@ manager/
 motion/
 sensors/
 utils/
+cyberdog_nav2/
 
 # examples and tests
 examples/
