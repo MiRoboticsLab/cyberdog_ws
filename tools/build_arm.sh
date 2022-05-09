@@ -21,6 +21,7 @@ mkdir -p /carpo_ws/src
 cd /carpo_ws/src
 git clone git@git.n.xiaomi.com:MiRoboticsLab/rop/cyberdog_ws.git
 vcs import . < cyberdog_ws/cyberdog.repos
+vcs import . < cyberdog_ws/vision.repos
 cd ..
 
 echo -n "build cyberdog ros2 applications source code"
