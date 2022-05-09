@@ -1,5 +1,5 @@
 repositories:
-  bridges:
+  cyberdog_tracking_base:
     type: git
     url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/cyberdog_tracking_base.git
     version: dev
