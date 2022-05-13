@@ -36,6 +36,180 @@
 #ifdef Platform_is_RaspberryPi
 #include <wiringPi.h>
 #endif
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <poll.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <signal.h>
+#include<sys/epoll.h>
+
+/*** constants ***/
+#define SYSFS_GPIO_DIR "/sys/class/gpio"
+#define POLL_TIMEOUT 1 /* 1 ms */
+#define MAX_BUF 64
+
+/*** gpio functions ***/
+int gpio_export(unsigned int gpio);
+int gpio_unexport(unsigned int gpio);
+int gpio_set_dir(unsigned int gpio, const char *dir);
+int gpio_set_value(unsigned int gpio, unsigned int value);
+int gpio_get_value(unsigned int gpio, unsigned int *value);
+int gpio_set_edge(unsigned int gpio, const char *edge);
+int gpio_fd_open(unsigned int gpio, unsigned int dir);
+int gpio_fd_close(int fd);
+
+int gpio_export(unsigned int gpio)
+{
+	int fd, len;
+	char buf[MAX_BUF];
+
+	fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
+	if (fd < 0) {
+		 printf ("\nFailed export GPIO-%d\n", gpio);
+		return fd;
+	}
+
+	len = snprintf(buf, sizeof(buf), "%d", gpio);
+	write(fd, buf, len);
+	close(fd);
+	//printf ("\nSucessfully export GPIO-%d\n", gpio);
+	return 0;
+}
+
+int gpio_unexport(unsigned int gpio)
+{
+	int fd, len;
+	char buf[MAX_BUF];
+
+	fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
+	if (fd < 0) {
+		 printf ("\nFailed unexport GPIO-%d\n", gpio);
+		return fd;
+	}
+
+	len = snprintf(buf, sizeof(buf), "%d", gpio);
+	write(fd, buf, len);
+	close(fd);
+	//printf ("\nSucessfully unexport GPIO-%d\n", gpio);
+	return 0;
+}
+
+int gpio_set_dir(unsigned int gpio, const char *dir)
+{
+	int fd, len;
+	char buf[MAX_BUF];
+
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
+	fd = open(buf, O_WRONLY);
+	if (fd < 0) {
+		 printf ("\nFailed set GPIO-%d direction\n", gpio);
+		return fd;
+	}
+
+	write(fd, dir, strlen(dir)+1);
+	close(fd);
+	//printf ("\nSucessfully set GPIO-%d direction\n", gpio);
+	return 0;
+}
+
+int gpio_set_value(unsigned int gpio, unsigned int value)
+{
+	int fd, len;
+	char buf[MAX_BUF];
+
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
+
+	fd = open(buf, O_WRONLY);
+	if (fd < 0) {
+		printf ("\nFailed set GPIO-%d value\n", gpio);
+		return fd;
+	}
+
+	if (value!=0)
+		{
+		int i = write(fd, "1", 2);
+	   // printf ("\nGPIO-%d value set high\n", gpio);
+		}
+	else
+		{
+		write(fd, "0", 2);
+		//printf ("\nGPIO-%d value set low\n", gpio);
+		}
+
+	close(fd);
+	//printf ("\nSucessfully set GPIO-%d value\n", gpio);
+	return 0;
+}
+
+int gpio_get_value(unsigned int gpio, unsigned int *value)
+{
+	int fd, len;
+	char buf[MAX_BUF];
+	char ch;
+
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
+
+	fd = open(buf, O_RDONLY);
+	if (fd < 0) {
+		printf ("\nFailed get GPIO-%d value\n", gpio);
+		return fd;
+	}
+
+	read(fd, &ch, 1);
+
+	if (ch != '0') {
+		*value = 1;
+	} else {
+		*value = 0;
+	}
+
+	close(fd);
+	//printf ("\nSucessfully get GPIO-%d value\n", gpio);
+	return 0;
+}
+
+int gpio_set_edge(unsigned int gpio, const char *edge)
+{
+	int fd, len;
+	char buf[MAX_BUF];
+
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/edge", gpio);
+
+	fd = open(buf, O_WRONLY);
+	if (fd < 0) {
+		printf ("\nFailed set GPIO-%d edge\n", gpio);
+		return fd;
+	}
+
+	write(fd, edge, strlen(edge) + 1);
+	close(fd);
+	return 0;
+}
+
+int gpio_fd_open(unsigned int gpio, unsigned int dir)
+{
+	int fd, len;
+	char buf[MAX_BUF];
+
+	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
+
+	fd = open(buf, dir | O_NONBLOCK );
+	if (fd < 0) {
+		perror("gpio/fd_open");
+	}
+	return fd;
+}
+
+int gpio_fd_close(int fd)
+{
+	return close(fd);
+}
+
+
 #define HOST_REQ_WAIT_TIME_MS   2000
 static void *g_fdLog = NULL;
 static bool g_bEnabledCtsForMcuRdy = false;
@@ -86,6 +260,7 @@ bool OpenSPITTY(const char *device, long speed)
   uint8_t mode;
   uint8_t bits = 8;
   uint32_t spi_speed = speed;//25000000;
+//   uint32_t spi_speed = 5000000;
   mode = SPI_MODE_3;
   iPortHandler = open(device, O_RDWR);
   if (iPortHandler < 0)
@@ -518,17 +693,33 @@ uint8_t LD2OS_getMcuRdy(void)
     return (1);
 }
 
+void LD2OS_initGpio(void)
+{
+    gpio_export(LODI2_GPIO_NSTDBY);
+    gpio_export(LODI2_GPIO_HOST_REQ);
+    gpio_set_dir(LODI2_GPIO_NSTDBY, "out");
+    gpio_set_dir(LODI2_GPIO_HOST_REQ, "in");
+}
+
+void LD2OS_freeGpio(void)
+{
+    gpio_unexport(LODI2_GPIO_NSTDBY);
+    gpio_unexport(LODI2_GPIO_HOST_REQ);
+}
+
 void LD2OS_setGpio(LoDi2Gpio pin, uint8_t value)
 {
+    gpio_set_value(pin, value);
 }
 
 uint8_t LD2OS_getGpio(LoDi2Gpio pin)
 {
-#ifdef Platform_is_RaspberryPi
-    return digitalRead(pin);
-#else
-    return 1;
-#endif
+    unsigned int value;
+
+    gpio_get_value(pin, &value);
+
+    return value;
+    // return 1;
 }
 
 int Transfer_spi_buffers(int fd, void *tx_buffer, void *rx_buffer, size_t length)
@@ -543,8 +734,10 @@ int Transfer_spi_buffers(int fd, void *tx_buffer, void *rx_buffer, size_t length
 	transfer.tx_buf = (unsigned long)tx_buffer;
 	transfer.len = length;
 
+    // LD2_LOG("+++++++%s %d\n", __FUNCTION__, __LINE__);
 	if (ioctl(fd, SPI_IOC_MESSAGE(1), & transfer) < 0)
 		return -1;
+    // LD2_LOG("+++++++%s %d\n", __FUNCTION__, __LINE__);
 
 	return 0;
 }
@@ -646,10 +839,12 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
 			payload_len = LD2SSI_getRxLength(rx_ssi_buff);
 			if (payload_len == 0 && LD2OS_getTime() - start < timeout)
 			{
+                // LD2_LOG("+++++++%s %d start = %d, LD2OS_getTime() = %d\n", __FUNCTION__, __LINE__, start, LD2OS_getTime());
 				LD2OS_delay(1);
 			}
 			else
 			{
+                // LD2_LOG("+++++++%s %d start = %d, LD2OS_getTime() = %d\n", __FUNCTION__, __LINE__, start, LD2OS_getTime());
 				uint32_t readLen = MIN(ulReqLen, payload_len);
                 //If we will recive a packet,the TX buffer 1st~3th bytes the same time should be 0x30 0x00 0x00
                 memset(&tx_ssi_buff[3], 0xFF, readLen);

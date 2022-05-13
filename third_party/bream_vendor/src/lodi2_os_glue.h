@@ -144,8 +144,10 @@ typedef enum{
 typedef enum{
 	LODI2_GPIO_MCU_REQ = 0,
 	LODI2_GPIO_MCU_RESP = 1,
-	LODI2_GPIO_HOST_REQ = 2,
-	LODI2_GPIO_NSTDBY = 7,
+	// LODI2_GPIO_HOST_REQ = 2,
+	LODI2_GPIO_HOST_REQ = 225,
+	// LODI2_GPIO_NSTDBY = 7,
+	LODI2_GPIO_NSTDBY = 224,
     LODI2_GPIO_TEST = 12, // NOTE: TEST pin is not used for NXP board but declared here to pass build.
 }LoDi2Gpio;
 
@@ -251,6 +253,9 @@ bool LD2OS_waitForHostReq(uint32_t timeout);
  *  @return level 0 for not ready(MCU sleep), 1 for ready (MCU wake-up)
  */
 uint8_t LD2OS_getMcuRdy(void);
+
+void LD2OS_initGpio(void);
+void LD2OS_freeGpio(void);
 
 /** @brief Set high/low specific gpio pin which is used for LoDi2 board. For more information of gpio pin, please refer HW introduction
  *  @param[in] pin Gpio pin
