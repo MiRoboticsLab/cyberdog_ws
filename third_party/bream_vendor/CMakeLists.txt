@@ -10,14 +10,20 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 find_package(rclcpp REQUIRED)
 
+
+
+#file(GLOB Sources src/*.cpp src/*.c)
+
+
 add_library(${PROJECT_NAME} SHARED
-  src/bream_callbacks.cpp
+  src/bream.cpp
+  src/bream_endian.cpp
   src/bream_handler.cpp
   src/bream_helper.cpp
-  src/bream.cpp
-  src/lodi2_os_glue_posix.cpp
   src/patch_downloader.cpp
-  src/bream_endian.cpp
+  src/bream_callbacks.cpp
+  src/lodi2_os_glue_posix.cpp
+  src/lodi2_ssi_spi.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
