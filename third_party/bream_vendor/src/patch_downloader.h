@@ -23,8 +23,8 @@
 
 #define DOWNLOAD_TIMEOUT_MS 10000
 
-typedef void (* PatchDownloadProgressCb)(int percent);
+typedef void(*PatchDownloadProgressCb)(int percent);
 
-bool Bream_LoadPatch(const char * patch, PatchDownloadProgressCb cb = 0, char * tty = nullptr);
+bool Bream_LoadPatch(const char *patch, PatchDownloadProgressCb cb = 0, char *tty=nullptr);
 
 #endif
