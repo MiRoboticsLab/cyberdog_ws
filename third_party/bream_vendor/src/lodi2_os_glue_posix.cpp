@@ -76,7 +76,7 @@ int gpio_export(unsigned int gpio)
 	len = snprintf(buf, sizeof(buf), "%d", gpio);
 	write(fd, buf, len);
 	close(fd);
-	//printf ("\nSucessfully export GPIO-%d\n", gpio);
+	printf ("\nSucessfully export GPIO-%d\n", gpio);
 	return 0;
 }
 
@@ -94,7 +94,7 @@ int gpio_unexport(unsigned int gpio)
 	len = snprintf(buf, sizeof(buf), "%d", gpio);
 	write(fd, buf, len);
 	close(fd);
-	//printf ("\nSucessfully unexport GPIO-%d\n", gpio);
+	printf ("\nSucessfully unexport GPIO-%d\n", gpio);
 	return 0;
 }
 

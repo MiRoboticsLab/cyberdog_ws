@@ -17,7 +17,7 @@
 
 #ifndef LODI2_OS_GLUE_LAYER_H
 #define LODI2_OS_GLUE_LAYER_H
-
+#include <string>
 #include <stdint.h>
 #include <stdlib.h>
 /**  @addtogroup control
@@ -55,7 +55,7 @@ typedef struct _Lodi2DateTime
 #define LD2_LOG_DIR  ".\\\\"
 #define LD2_FAILSAFE_DIR ".\\\\"
 #elif defined(__unix__) || defined (__APPLE__)
-#define LD2_LOG_DIR  "./"
+#define LD2_LOG_DIR  "/opt/ros2/cyberdog/"
 #define LD2_FAILSAFE_DIR "./failsafe/"
 #elif defined(SDK_OS_FREE_RTOS)
 #define LD2_LOG_DIR "/log/"

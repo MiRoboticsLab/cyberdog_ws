@@ -308,6 +308,8 @@ int32_t LD2OS_statFile(const char* path, LD2OSFileInfo* info)
 
 void* LD2OS_openLog()
 {
+    printf("sensor_manager 01");
+
     std::lock_guard<std::recursive_mutex> lock(logLock);
 	if (g_fdLog)
 	{
@@ -323,8 +325,13 @@ void* LD2OS_openLog()
 	sprintf(fname, "%sgl-%04d-%02d-%02d-%02d-%02d-%02d.log", LD2_LOG_DIR,
         ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday,
         ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
+    printf("sensor_manager 02");
+    printf("sensor_manager 02 %s",fname);
+
 	g_fdLog = LD2OS_openFile(fname, LD2OS_O_RDWR|LD2OS_O_CREAT);
 	LD2_ASSERT(g_fdLog);
+    printf("sensor_manager 03");
+
 	return g_fdLog;
 }
 
