@@ -16,11 +16,10 @@ import getopt
 import os
 import platform
 import re
+import subprocess
 import socket
 import sys
 import time
-import uuid
-
 
 #
 # 预处理：仅处理命令行参数，详情参见 help_info
@@ -105,12 +104,27 @@ of the current program before starting it.
 
 
 #
-# 获取 namespace：主机名 + MAC地址
+# 获取 shell 指令结果
+#
+def get_shell(cmd):
+    cmd_ret = subprocess.Popen(
+        cmd,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        encoding='utf_8')
+    data = cmd_ret.communicate()[0]
+    data = re.sub('[^0-9a-zA-Z:]+', '', data)
+    data = re.sub('[:]+', '_', data)
+    return data
+
+#
+# 获取 namespace
 #
 def get_namespace():
-    mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
-    mac_address = '_'.join([mac[e:e + 2] for e in range(0, 11, 2)])
     hostname = socket.getfqdn(socket.gethostname())
-    namespace = hostname + '_' + mac_address
+    mac = get_shell("ifconfig |grep ether| awk 'NR==1' |awk '{print $2}'")
+    # sn = get_shell("cat /dev/mmcblk0p11 | grep -a PSN | cut -c 6-23")
+    namespace = hostname + '_' + mac
     namespace = re.sub('[^0-9a-zA-Z]+', '_', namespace)
     return namespace

@@ -99,4 +99,12 @@ data:
     package: sensor_manager
     executable: sensor_manager
     parameters:
+      - {simulator: [*GPS, *LIDAR, *TOF, *ULTRASONIC],     description: "需要开启模拟器模式的传感器"}
+
+  #------------------------------------------------------------->
+  factory_sensor_manager:
+    namespace: factory
+    package: sensor_manager
+    executable: sensor_manager
+    parameters:
       - {simulator: [*LIDAR, *TOF, *ULTRASONIC],     description: "需要开启模拟器模式的传感器"}
