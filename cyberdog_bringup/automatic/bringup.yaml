@@ -6,3 +6,5 @@ data:
     launchs: [base,navigation_bringup]
   - file_name: simulator.launch.py
     launchs: [sim_base,navigation_bringup]
+  - file_name: factory.launch.py
+    launchs: [factory_base]

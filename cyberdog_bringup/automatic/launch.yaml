@@ -53,3 +53,8 @@ data:
   navigation_bringup:
     package_name: navigation_bringup
     file_name: navigation.launch.py
+
+  #------------------------------------------------------------->
+  factory_base:
+    file_name: factory_base.launch.py
+    nodes: [factory_sensor_manager]

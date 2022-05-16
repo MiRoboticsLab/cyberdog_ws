@@ -19,30 +19,32 @@
 #include <stdint.h>
 
 static union {
-  int l;
-  char c[sizeof(int)];
-} const x = {1, };
+    int l;
+    char c[sizeof(int)];
+} const x = {1,};
 
 
 bool _LD2_isHostBigEndian(void)
 {
-  return x.c[0] == 0;
+	return (x.c[0]==0);
 }
 
 
 float _LD2_SwapFloat(float val)
 {
-  float ret = val;
-  uint32_t * x = (uint32_t *)&ret;
-  *x = _LD2_SWAP32(*x);
-  return ret;
+    float ret=val;
+    uint32_t *x = (uint32_t*)&ret;
+    *x = _LD2_SWAP32(*x);
+    return ret;
 }
 
 
 double _LD2_SwapDouble(double val)
 {
-  double ret = val;
-  uint64_t * x = (uint64_t *)&ret;
-  *x = _LD2_SWAP64(*x);
-  return ret;
+    double ret=val;
+    uint64_t *x = (uint64_t*)&ret;
+    *x = _LD2_SWAP64(*x);
+    return ret;
 }
+
+
