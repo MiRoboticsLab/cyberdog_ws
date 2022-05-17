@@ -928,8 +928,9 @@ void* LD2OS_openLog()
   
     time(&rawtime);
     ptm = localtime(&rawtime);
-	sprintf(fname, "%sgl-%04d-%02d-%02d-%02d-%02d-%02d.log", LD2_LOG_DIR, ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-	g_fdLog = LD2OS_openFile(fname, LD2OS_O_RDWR|LD2OS_O_CREAT);
+	//sprintf(fname, "%sgl-%04d-%02d-%02d-%02d-%02d-%02d.log", LD2_LOG_DIR, ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
+    sprintf(fname, "%sgl-cyberdog_gps.log", LD2_LOG_DIR);
+    g_fdLog = LD2OS_openFile(fname, LD2OS_O_RDWR|LD2OS_O_CREAT);
 	LD2_ASSERT(g_fdLog);
 	return g_fdLog;
 }
