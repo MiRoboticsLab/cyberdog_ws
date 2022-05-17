@@ -16,10 +16,11 @@ import getopt
 import os
 import platform
 import re
-import subprocess
 import socket
+import subprocess
 import sys
 import time
+
 
 #
 # 预处理：仅处理命令行参数，详情参见 help_info
@@ -117,6 +118,7 @@ def get_shell(cmd):
     data = re.sub('[^0-9a-zA-Z:]+', '', data)
     data = re.sub('[:]+', '_', data)
     return data
+
 
 #
 # 获取 namespace
