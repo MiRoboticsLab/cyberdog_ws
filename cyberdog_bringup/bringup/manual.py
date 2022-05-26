@@ -16,8 +16,8 @@ import getopt
 import os
 import platform
 import re
-import socket
 import subprocess
+import socket
 import sys
 import time
 
