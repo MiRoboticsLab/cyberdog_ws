@@ -25,7 +25,7 @@ data:
       log_cmd: null
       on_exit: null
       respawn: true
-      respawn_delay:  1
+      respawn_delay: 1
     events:
       handled:
         shutdown_process: null

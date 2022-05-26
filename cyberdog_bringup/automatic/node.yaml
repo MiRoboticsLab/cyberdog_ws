@@ -37,10 +37,11 @@ data:
       - {from: xxx1_topic,          to: xxx3_topic}
       - {from: xxx1_service,        to: xxx2_service}
     arguments:
-      - {bringup_argument_int: 0,             description: "int 键值对"}
-      - {bringup_argument_float: 0.1,         description: "float 键值对"}
-      - {bringup_argument_bool: True,         description: "bool 键值对"}
-      - {bringup_argument_string: string, description: "string 键值对"}
+      - '--log-level debug'
+      - '--disable-stdout-logs'
+    output: screen
+    emulate_tty: True
+    respawn: True
 
   #------------------------------------------------------------->
   connector:
@@ -86,6 +87,13 @@ data:
   sim_mr813_controller:
     package: motion_action
     executable: test_as_controller
+
+  #------------------------------------------------------------->
+  visual_programming_engine:
+    package: visual_programming
+    executable: engine
+    output: screen
+    emulate_tty: True
 
   #------------------------------------------------------------->
   sim_device_manager:
