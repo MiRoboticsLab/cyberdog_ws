@@ -42,12 +42,12 @@ data:
   #------------------------------------------------------------->
   base:
     file_name: base.launch.py
-    nodes: [connector, device_manager, sensor_manager, motion_manager, cyberdog_grpc]
+    nodes: [connector, device_manager, sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc]
 
   #------------------------------------------------------------->
   sim_base:
     file_name: sim_base.launch.py
-    nodes: [connector, sim_device_manager, sim_sensor_manager, motion_manager, cyberdog_grpc, sim_mr813_controller]
+    nodes: [connector, sim_device_manager, sim_sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc, sim_mr813_controller]
 
   #------------------------------------------------------------->
   navigation_bringup:
@@ -57,4 +57,4 @@ data:
   #------------------------------------------------------------->
   factory_base:
     file_name: factory_base.launch.py
-    nodes: [factory_sensor_manager]
+    nodes: [factory_sensor_manager, static_tf_lidar]
