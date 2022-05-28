@@ -455,7 +455,6 @@ macro(definition_node_argument _target_file _target_key)
     list(APPEND _launch "${_tab_3}arguments=${front_bracket}\n")
     set(_arguments_key "data.${_target_key}.arguments")
     get_keys(${_target_file} "${_arguments_key}" _target_arguments_key_keys)
-    
     set(_comma "${_tab_4}")
     list(FIND _target_arguments_key_keys "usr-args" _usr_args_key_index)
     if(${_usr_args_key_index} GREATER_EQUAL 0)
