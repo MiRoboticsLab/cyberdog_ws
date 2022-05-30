@@ -11,7 +11,6 @@ echo -n "clone carpo_cyberdog_ros2_lib_deb directories"
 mkdir carpo_deb_repos
 cd carpo_deb_repos
 git clone git@git.n.xiaomi.com:MiRoboticsLab/deb_workspace/carpo_deb_ws/carpo_cyberdog_ros2_lib_deb.git
-rm carpo_cyberdog_ros2_lib_deb/.git -rf
 cd /
 
 source /opt/ros2/galactic/local_setup.bash
