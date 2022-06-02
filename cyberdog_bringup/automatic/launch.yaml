@@ -47,7 +47,7 @@ data:
   #------------------------------------------------------------->
   sim_base:
     file_name: sim_base.launch.py
-    nodes: [connector, sim_device_manager, sim_sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc, sim_mr813_controller]
+    nodes: [connector, sim_device_manager, sim_sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc]
 
   #------------------------------------------------------------->
   navigation_bringup:
