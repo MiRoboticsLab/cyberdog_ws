@@ -785,7 +785,7 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
     uint32_t payload_len = 0;
     uint32_t start = LD2OS_getTime();
     // uint32_t waitHostReqdelayMs = 1;//1ms
-    uint32_t waitHostReqdelayMs = 5;//1ms
+    uint32_t waitHostReqdelayMs = 1;//1ms
     uint32_t hostReqWaitTime = 0;
     uint8_t hostReqState;
     if (g_connType != LODI2_SERIAL_UART && g_connType != LODI2_SERIAL_SPI)
