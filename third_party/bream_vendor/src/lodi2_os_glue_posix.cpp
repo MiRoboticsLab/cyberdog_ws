@@ -76,7 +76,7 @@ int gpio_export(unsigned int gpio)
 	len = snprintf(buf, sizeof(buf), "%d", gpio);
 	write(fd, buf, len);
 	close(fd);
-	printf ("\nSucessfully export GPIO-%d\n", gpio);
+	//printf ("\nSucessfully export GPIO-%d\n", gpio);
 	return 0;
 }
 
@@ -94,7 +94,7 @@ int gpio_unexport(unsigned int gpio)
 	len = snprintf(buf, sizeof(buf), "%d", gpio);
 	write(fd, buf, len);
 	close(fd);
-	printf ("\nSucessfully unexport GPIO-%d\n", gpio);
+	//printf ("\nSucessfully unexport GPIO-%d\n", gpio);
 	return 0;
 }
 
@@ -145,19 +145,9 @@ int gpio_set_value(unsigned int gpio, unsigned int value)
 	return 0;
 }
 
-int gpio_get_value(unsigned int gpio, unsigned int *value)
+int gpio_get_value(int fd, unsigned int *value)
 {
-	int fd, len;
-	char buf[MAX_BUF];
 	char ch;
-
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
-
-	fd = open(buf, O_RDONLY);
-	if (fd < 0) {
-		printf ("\nFailed get GPIO-%d value\n", gpio);
-		return fd;
-	}
 
 	read(fd, &ch, 1);
 
@@ -167,8 +157,6 @@ int gpio_get_value(unsigned int gpio, unsigned int *value)
 		*value = 0;
 	}
 
-	close(fd);
-	//printf ("\nSucessfully get GPIO-%d value\n", gpio);
 	return 0;
 }
 
@@ -190,18 +178,21 @@ int gpio_set_edge(unsigned int gpio, const char *edge)
 	return 0;
 }
 
-int gpio_fd_open(unsigned int gpio, unsigned int dir)
+int gpio_fd_open(int *fd, unsigned int gpio)
 {
-	int fd, len;
+	// int fd, len;
+    int len;
 	char buf[MAX_BUF];
 
 	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
 
-	fd = open(buf, dir | O_NONBLOCK );
+	*fd = open(buf, O_WRONLY);
 	if (fd < 0) {
-		perror("gpio/fd_open");
+		printf ("\nFailed open GPIO-%d\n", gpio);
+        return -1;
 	}
-	return fd;
+
+	return 0;
 }
 
 int gpio_fd_close(int fd)
@@ -693,16 +684,20 @@ uint8_t LD2OS_getMcuRdy(void)
     return (1);
 }
 
+int host_req_fd;
+
 void LD2OS_initGpio(void)
 {
     gpio_export(LODI2_GPIO_NSTDBY);
     gpio_export(LODI2_GPIO_HOST_REQ);
+    gpio_fd_open(&host_req_fd, LODI2_GPIO_HOST_REQ);
     gpio_set_dir(LODI2_GPIO_NSTDBY, "out");
     gpio_set_dir(LODI2_GPIO_HOST_REQ, "in");
 }
 
 void LD2OS_freeGpio(void)
 {
+    gpio_fd_close(host_req_fd);
     gpio_unexport(LODI2_GPIO_NSTDBY);
     gpio_unexport(LODI2_GPIO_HOST_REQ);
 }
@@ -716,7 +711,7 @@ uint8_t LD2OS_getGpio(LoDi2Gpio pin)
 {
     unsigned int value;
 
-    gpio_get_value(pin, &value);
+    gpio_get_value(host_req_fd, &value);
 
     return value;
     // return 1;
@@ -789,7 +784,8 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
     uint32_t ctrl_len = 0;
     uint32_t payload_len = 0;
     uint32_t start = LD2OS_getTime();
-    uint32_t waitHostReqdelayMs = 1;//1ms
+    // uint32_t waitHostReqdelayMs = 1;//1ms
+    uint32_t waitHostReqdelayMs = 5;//1ms
     uint32_t hostReqWaitTime = 0;
     uint8_t hostReqState;
     if (g_connType != LODI2_SERIAL_UART && g_connType != LODI2_SERIAL_SPI)
@@ -928,8 +924,8 @@ void* LD2OS_openLog()
   
     time(&rawtime);
     ptm = localtime(&rawtime);
-	//sprintf(fname, "%sgl-%04d-%02d-%02d-%02d-%02d-%02d.log", LD2_LOG_DIR, ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-    sprintf(fname, "%sgl-cyberdog_gps.log", LD2_LOG_DIR);
+	// sprintf(fname, "%sgl-%04d-%02d-%02d-%02d-%02d-%02d.log", LD2_LOG_DIR, ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
+	sprintf(fname, "%sgl-cyberdog_gps.log", LD2_LOG_DIR);
     g_fdLog = LD2OS_openFile(fname, LD2OS_O_RDWR|LD2OS_O_CREAT);
 	LD2_ASSERT(g_fdLog);
 	return g_fdLog;
