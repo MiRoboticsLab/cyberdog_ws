@@ -817,6 +817,7 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
                 if (!hostReqState)
                 {
                     LD2OS_delay(waitHostReqdelayMs);
+                    // LD2_LOG("delay 1");
                     hostReqWaitTime += waitHostReqdelayMs;
                 }
             } while (!hostReqState && hostReqWaitTime < HOST_REQ_WAIT_TIME_MS);
@@ -836,7 +837,8 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
 			if (payload_len == 0 && LD2OS_getTime() - start < timeout)
 			{
                 // LD2_LOG("+++++++%s %d start = %d, LD2OS_getTime() = %d\n", __FUNCTION__, __LINE__, start, LD2OS_getTime());
-				LD2OS_delay(1);
+				LD2OS_delay(50);
+                // LD2_LOG("delay 50");
 			}
 			else
 			{
