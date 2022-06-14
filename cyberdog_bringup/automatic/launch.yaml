@@ -42,7 +42,7 @@ data:
   #------------------------------------------------------------->
   base:
     file_name: base.launch.py
-    nodes: [connector, device_manager, sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc]
+    nodes: [connector, device_manager, sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc, cyberdog_audio]
 
   #------------------------------------------------------------->
   sim_base:

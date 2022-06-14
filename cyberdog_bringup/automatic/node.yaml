@@ -129,3 +129,9 @@ data:
     name: static_tf_pub_laser
     arguments:
       usr-args: ['0', '0', '0.02', '0', '0', '0', '1', 'base_link', 'laser_frame']
+
+  #------------------------------------------------------------->
+  cyberdog_audio:
+    package: cyberdog_audio
+    executable: cyberdog_audio
+
