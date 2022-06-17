@@ -61,6 +61,7 @@ int gpio_get_value(unsigned int gpio, unsigned int *value);
 int gpio_set_edge(unsigned int gpio, const char *edge);
 int gpio_fd_open(unsigned int gpio, unsigned int dir);
 int gpio_fd_close(int fd);
+void LD2OS_freeGpio(void);
 
 int gpio_export(unsigned int gpio)
 {
@@ -218,6 +219,7 @@ using FtdiMap = std::map<std::string, FtdiDevice>;
 FtdiMap g_ftdiMap;
 
 static std::recursive_mutex LogLock;
+static std::mutex write_read_lock;
 
 void LD2OS_delay(uint32_t mSec)
 {
@@ -616,7 +618,7 @@ bool OpenTTY(const char* pcPortName, long lBaudRate)
     return true;
 }
 #endif
-
+void LD2OS_initGpio(void);
 bool LD2OS_open(LoDi2SerialConnection connType, int port, int baudrate, const char *tty_str)
 {
 
@@ -634,6 +636,7 @@ bool LD2OS_open(LoDi2SerialConnection connType, int port, int baudrate, const ch
     wiringPiSetup();
     pinMode(LODI2_GPIO_HOST_REQ, INPUT);
 #endif
+    LD2OS_initGpio();
     if(connType == LODI2_SERIAL_UART)
     {
         return OpenTTY((const char*) tty_str, (long) baudrate);
@@ -659,6 +662,7 @@ void LD2OS_emptySerialBuffer()
 
 void LD2OS_close(void)
 {
+    LD2OS_freeGpio();
     close(iPortFd);
 }
 
@@ -763,6 +767,7 @@ bool LD2OS_writeToSerial(const unsigned char *pcBuff, uint32_t ulLen)
     //if type is SPI,we may pack a buff sent to slave(header is 0x10)
     if(g_connType == LODI2_SERIAL_SPI)
     {
+        std::lock_guard<std::mutex> lockg(write_read_lock);
         LD2SSI_packTxBuff((unsigned char *)pcBuff, ulLen, &ssi_tx_buf, &ssi_tx_len);
         Transfer_spi_buffers(iPortFd, ssi_tx_buf, ssi_rx_buf, ssi_tx_len);
     }
@@ -822,8 +827,8 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
                 }
             } while (!hostReqState && hostReqWaitTime < HOST_REQ_WAIT_TIME_MS);
 
-
-
+            
+            std::lock_guard<std::mutex> lockg(write_read_lock);
 			/* get payload length from 4775 first
 			 *    - tx_ssi_buff & rx_ssi_buff are buffer pointer in ssi driver
 			 */
