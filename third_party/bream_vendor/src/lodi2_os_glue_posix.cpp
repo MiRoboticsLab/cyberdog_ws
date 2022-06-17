@@ -61,6 +61,7 @@ int gpio_get_value(unsigned int gpio, unsigned int *value);
 int gpio_set_edge(unsigned int gpio, const char *edge);
 int gpio_fd_open(unsigned int gpio, unsigned int dir);
 int gpio_fd_close(int fd);
+void LD2OS_freeGpio(void);
 
 int gpio_export(unsigned int gpio)
 {
@@ -76,7 +77,7 @@ int gpio_export(unsigned int gpio)
 	len = snprintf(buf, sizeof(buf), "%d", gpio);
 	write(fd, buf, len);
 	close(fd);
-	printf ("\nSucessfully export GPIO-%d\n", gpio);
+	//printf ("\nSucessfully export GPIO-%d\n", gpio);
 	return 0;
 }
 
@@ -94,7 +95,7 @@ int gpio_unexport(unsigned int gpio)
 	len = snprintf(buf, sizeof(buf), "%d", gpio);
 	write(fd, buf, len);
 	close(fd);
-	printf ("\nSucessfully unexport GPIO-%d\n", gpio);
+	//printf ("\nSucessfully unexport GPIO-%d\n", gpio);
 	return 0;
 }
 
@@ -145,19 +146,9 @@ int gpio_set_value(unsigned int gpio, unsigned int value)
 	return 0;
 }
 
-int gpio_get_value(unsigned int gpio, unsigned int *value)
+int gpio_get_value(int fd, unsigned int *value)
 {
-	int fd, len;
-	char buf[MAX_BUF];
 	char ch;
-
-	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
-
-	fd = open(buf, O_RDONLY);
-	if (fd < 0) {
-		printf ("\nFailed get GPIO-%d value\n", gpio);
-		return fd;
-	}
 
 	read(fd, &ch, 1);
 
@@ -167,8 +158,6 @@ int gpio_get_value(unsigned int gpio, unsigned int *value)
 		*value = 0;
 	}
 
-	close(fd);
-	//printf ("\nSucessfully get GPIO-%d value\n", gpio);
 	return 0;
 }
 
@@ -190,18 +179,21 @@ int gpio_set_edge(unsigned int gpio, const char *edge)
 	return 0;
 }
 
-int gpio_fd_open(unsigned int gpio, unsigned int dir)
+int gpio_fd_open(int *fd, unsigned int gpio)
 {
-	int fd, len;
+	// int fd, len;
+    int len;
 	char buf[MAX_BUF];
 
 	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
 
-	fd = open(buf, dir | O_NONBLOCK );
+	*fd = open(buf, O_WRONLY);
 	if (fd < 0) {
-		perror("gpio/fd_open");
+		printf ("\nFailed open GPIO-%d\n", gpio);
+        return -1;
 	}
-	return fd;
+
+	return 0;
 }
 
 int gpio_fd_close(int fd)
@@ -227,6 +219,7 @@ using FtdiMap = std::map<std::string, FtdiDevice>;
 FtdiMap g_ftdiMap;
 
 static std::recursive_mutex LogLock;
+static std::mutex write_read_lock;
 
 void LD2OS_delay(uint32_t mSec)
 {
@@ -625,7 +618,7 @@ bool OpenTTY(const char* pcPortName, long lBaudRate)
     return true;
 }
 #endif
-
+void LD2OS_initGpio(void);
 bool LD2OS_open(LoDi2SerialConnection connType, int port, int baudrate, const char *tty_str)
 {
 
@@ -643,6 +636,7 @@ bool LD2OS_open(LoDi2SerialConnection connType, int port, int baudrate, const ch
     wiringPiSetup();
     pinMode(LODI2_GPIO_HOST_REQ, INPUT);
 #endif
+    LD2OS_initGpio();
     if(connType == LODI2_SERIAL_UART)
     {
         return OpenTTY((const char*) tty_str, (long) baudrate);
@@ -668,6 +662,7 @@ void LD2OS_emptySerialBuffer()
 
 void LD2OS_close(void)
 {
+    LD2OS_freeGpio();
     close(iPortFd);
 }
 
@@ -693,16 +688,20 @@ uint8_t LD2OS_getMcuRdy(void)
     return (1);
 }
 
+int host_req_fd;
+
 void LD2OS_initGpio(void)
 {
     gpio_export(LODI2_GPIO_NSTDBY);
     gpio_export(LODI2_GPIO_HOST_REQ);
+    gpio_fd_open(&host_req_fd, LODI2_GPIO_HOST_REQ);
     gpio_set_dir(LODI2_GPIO_NSTDBY, "out");
     gpio_set_dir(LODI2_GPIO_HOST_REQ, "in");
 }
 
 void LD2OS_freeGpio(void)
 {
+    gpio_fd_close(host_req_fd);
     gpio_unexport(LODI2_GPIO_NSTDBY);
     gpio_unexport(LODI2_GPIO_HOST_REQ);
 }
@@ -716,7 +715,7 @@ uint8_t LD2OS_getGpio(LoDi2Gpio pin)
 {
     unsigned int value;
 
-    gpio_get_value(pin, &value);
+    gpio_get_value(host_req_fd, &value);
 
     return value;
     // return 1;
@@ -768,6 +767,7 @@ bool LD2OS_writeToSerial(const unsigned char *pcBuff, uint32_t ulLen)
     //if type is SPI,we may pack a buff sent to slave(header is 0x10)
     if(g_connType == LODI2_SERIAL_SPI)
     {
+        std::lock_guard<std::mutex> lockg(write_read_lock);
         LD2SSI_packTxBuff((unsigned char *)pcBuff, ulLen, &ssi_tx_buf, &ssi_tx_len);
         Transfer_spi_buffers(iPortFd, ssi_tx_buf, ssi_rx_buf, ssi_tx_len);
     }
@@ -789,6 +789,7 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
     uint32_t ctrl_len = 0;
     uint32_t payload_len = 0;
     uint32_t start = LD2OS_getTime();
+    // uint32_t waitHostReqdelayMs = 1;//1ms
     uint32_t waitHostReqdelayMs = 1;//1ms
     uint32_t hostReqWaitTime = 0;
     uint8_t hostReqState;
@@ -821,12 +822,13 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
                 if (!hostReqState)
                 {
                     LD2OS_delay(waitHostReqdelayMs);
+                    // LD2_LOG("delay 1");
                     hostReqWaitTime += waitHostReqdelayMs;
                 }
             } while (!hostReqState && hostReqWaitTime < HOST_REQ_WAIT_TIME_MS);
 
-
-
+            
+            std::lock_guard<std::mutex> lockg(write_read_lock);
 			/* get payload length from 4775 first
 			 *    - tx_ssi_buff & rx_ssi_buff are buffer pointer in ssi driver
 			 */
@@ -840,7 +842,8 @@ bool LD2OS_readFromSerial(unsigned char *pcBuff, uint32_t *ulLen, uint32_t ulReq
 			if (payload_len == 0 && LD2OS_getTime() - start < timeout)
 			{
                 // LD2_LOG("+++++++%s %d start = %d, LD2OS_getTime() = %d\n", __FUNCTION__, __LINE__, start, LD2OS_getTime());
-				LD2OS_delay(1);
+				LD2OS_delay(50);
+                // LD2_LOG("delay 50");
 			}
 			else
 			{
@@ -928,8 +931,8 @@ void* LD2OS_openLog()
   
     time(&rawtime);
     ptm = localtime(&rawtime);
-	//sprintf(fname, "%sgl-%04d-%02d-%02d-%02d-%02d-%02d.log", LD2_LOG_DIR, ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-    sprintf(fname, "%sgl-cyberdog_gps.log", LD2_LOG_DIR);
+	// sprintf(fname, "%sgl-%04d-%02d-%02d-%02d-%02d-%02d.log", LD2_LOG_DIR, ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
+	sprintf(fname, "%sgl-cyberdog_gps.log", LD2_LOG_DIR);
     g_fdLog = LD2OS_openFile(fname, LD2OS_O_RDWR|LD2OS_O_CREAT);
 	LD2_ASSERT(g_fdLog);
 	return g_fdLog;
