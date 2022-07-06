@@ -57,4 +57,4 @@ data:
   #------------------------------------------------------------->
   factory_base:
     file_name: factory_base.launch.py
-    nodes: [factory_sensor_manager, static_tf_lidar]
+    nodes: [factory_sensor_manager, factory_device_manager,static_tf_lidar]

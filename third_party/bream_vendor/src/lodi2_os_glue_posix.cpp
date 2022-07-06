@@ -107,7 +107,8 @@ int gpio_set_dir(unsigned int gpio, const char *dir)
 	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
 	fd = open(buf, O_WRONLY);
 	if (fd < 0) {
-		 printf ("\nFailed set GPIO-%d direction\n", gpio);
+		printf ("\nFailed set GPIO-%d direction\n", gpio);
+        perror("open");
 		return fd;
 	}
 
