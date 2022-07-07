@@ -143,3 +143,8 @@ data:
     package: cyberdog_audio
     executable: cyberdog_audio
 
+  #------------------------------------------------------------->
+  camera_test:
+    package: camera_test
+    executable: camera_server
+    name: camera_test_server

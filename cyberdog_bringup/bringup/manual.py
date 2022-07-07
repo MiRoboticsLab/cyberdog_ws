@@ -26,7 +26,9 @@ import time
 # 预处理：仅处理命令行参数，详情参见 help_info
 #
 def preprocessing():
-    if (len(sys.argv) > 4):
+    argv = sys.argv[0:]
+    sys.argv = sys.argv[0:3]
+    if (len(argv) > 4):
         version_info = """
 version: 0.0.3 (default, 4 9 2022, 20:11:20)
 Python: 3.8.10 (default, Mar 15 2022, 12:22:08)  [GCC 9.4.0]
@@ -56,8 +58,8 @@ of the current program before starting it.
 
         user_env_var = 'USERNAME' if platform.system() == 'Windows' else 'USER'
         user = os.environ[user_env_var]
-        print('[', user, '] [mi] Preprocessing(', str(sys.argv[4:]), ')...')
-        for now_arg in sys.argv[4:]:
+        print('[', user, '] [mi] Preprocessing(', str(argv[4:]), ')...')
+        for now_arg in argv[4:]:
             if re.match(r'^(mi:=)+.*$', now_arg):
                 arg_str = re.sub(r'^(mi:=)+', '', now_arg)
                 arg_list = arg_str.split()
@@ -72,7 +74,7 @@ of the current program before starting it.
                         print('[', user, '] [mi] Version info:', version_info)
                         exit()
                     if opt_name in ('-r', '--reboot'):
-                        target_ps = ' '.join(sys.argv[0:4])
+                        target_ps = ' '.join(argv[0:4])
                         _ps = "ps -ef | grep '" + target_ps
                         _find = "' | wc -l"
                         _kill = "' | awk 'NR==1'| awk '{print $2}' | xargs kill -9"
