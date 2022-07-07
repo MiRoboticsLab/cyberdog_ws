@@ -42,12 +42,12 @@ data:
   #------------------------------------------------------------->
   base:
     file_name: base.launch.py
-    nodes: [connector, device_manager, sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc, cyberdog_audio]
+    nodes: [connector, device_manager, sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc, cyberdog_audio, camera_test]
 
   #------------------------------------------------------------->
   sim_base:
     file_name: sim_base.launch.py
-    nodes: [connector, sim_device_manager, sim_sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc]
+    nodes: [connector, sim_device_manager, sim_sensor_manager, static_tf_lidar, motion_manager, cyberdog_grpc, cyberdog_audio, camera_test]
 
   #------------------------------------------------------------->
   navigation_bringup:
