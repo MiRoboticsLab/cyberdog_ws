@@ -63,6 +63,36 @@ int gpio_fd_open(unsigned int gpio, unsigned int dir);
 int gpio_fd_close(int fd);
 void LD2OS_freeGpio(void);
 
+/**********************************************************/
+/*** Name: mode_check                                   ***/
+/*** Function: check whether gpio node is ready or not  ***/
+/***           if not ready, wait for a period          ***/
+/*** Param:                                             ***/
+/***       pathname: node path                          ***/
+/***       mode: R_OK 4 read permission.                ***/
+/***             W_OK 2 write permission.               ***/
+/***             X_OK 1 execute permission.             ***/
+/***             F_OK 0 existence.                      ***/
+/***             refer to unistd.h                      ***/
+/***       try_cnt: try to access times                 ***/
+/** *               wait 5ms every time                 ***/
+/**********************************************************/
+int mode_check(const char * pathname, int mode, int try_cnt)
+{
+    int result = 0;
+
+    for(int i = 0; i < try_cnt; i++){
+       //printf("try_cnt = %d\n", i);
+        result = access(pathname, mode);
+        if(result == 0){
+            break; 
+        }
+        usleep(5*1000);
+    }
+
+    return result;
+}
+
 int gpio_export(unsigned int gpio)
 {
 	int fd, len;
@@ -77,7 +107,8 @@ int gpio_export(unsigned int gpio)
 	len = snprintf(buf, sizeof(buf), "%d", gpio);
 	write(fd, buf, len);
 	close(fd);
-	//printf ("\nSucessfully export GPIO-%d\n", gpio);
+	//usleep(500*1000);
+	//printf ("\n Sucessfully export GPIO-%d\n", gpio);
 	return 0;
 }
 
@@ -103,8 +134,15 @@ int gpio_set_dir(unsigned int gpio, const char *dir)
 {
 	int fd, len;
 	char buf[MAX_BUF];
+	int result;
 
 	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", gpio);
+
+    result = mode_check(buf, W_OK, 100); // check whether can write
+    if(result != 0){
+        return result;
+    }
+
 	fd = open(buf, O_WRONLY);
 	if (fd < 0) {
 		printf ("\nFailed set GPIO-%d direction\n", gpio);
@@ -122,8 +160,14 @@ int gpio_set_value(unsigned int gpio, unsigned int value)
 {
 	int fd, len;
 	char buf[MAX_BUF];
+	int result;
 
 	len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/value", gpio);
+
+	result = mode_check(buf, W_OK, 100); // check whether can write
+    if(result != 0){
+        return result;
+    }
 
 	fd = open(buf, O_WRONLY);
 	if (fd < 0) {
