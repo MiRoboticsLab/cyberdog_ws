@@ -148,3 +148,8 @@ data:
     package: camera_test
     executable: camera_server
     name: camera_test_server
+
+  #------------------------------------------------------------->
+  cyberdog_permission:
+    package: cyberdog_permission
+    executable: cyberdog_permission

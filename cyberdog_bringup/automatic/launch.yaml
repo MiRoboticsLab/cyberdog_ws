@@ -58,3 +58,8 @@ data:
   factory_base:
     file_name: factory_base.launch.py
     nodes: [factory_sensor_manager, factory_device_manager,static_tf_lidar]
+
+  #------------------------------------------------------------->
+  cyberdog_sudo:
+    file_name: cyberdog_sudo.launch.py
+    nodes: [cyberdog_permission, cyberdog_wifi]
