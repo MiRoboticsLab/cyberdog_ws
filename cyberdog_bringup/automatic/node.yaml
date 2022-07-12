@@ -69,11 +69,6 @@ data:
     executable: cyberdog_manager
 
   #------------------------------------------------------------->
-  motion_manager:
-    package: black_box
-    executable: black_box
-
-  #------------------------------------------------------------->
   cyberdog_wifi:
     package: cyberdog_wifi
     executable: cyberdog_wifi
@@ -82,6 +77,11 @@ data:
   motion_manager:
     package: motion_manager
     executable: motion_manager
+
+  #------------------------------------------------------------->
+  odom_out_publisher:
+    package: motion_bridge
+    executable: odom_out_publisher
 
   #------------------------------------------------------------->
   cyberdog_grpc:
