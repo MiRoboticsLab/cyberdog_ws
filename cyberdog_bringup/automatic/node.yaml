@@ -79,6 +79,11 @@ data:
     executable: motion_manager
 
   #------------------------------------------------------------->
+  odom_out_publisher:
+    package: motion_bridge
+    executable: odom_out_publisher
+
+  #------------------------------------------------------------->
   cyberdog_grpc:
     package: cyberdog_grpc
     executable: app_server
