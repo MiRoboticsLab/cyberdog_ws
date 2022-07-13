@@ -8,6 +8,7 @@
 
 ```
 vcs import . < cyberdog.repos
+vcs import visions < vision.repos
 ```
 
 
@@ -17,3 +18,4 @@ vcs import . < cyberdog.repos
 - cyberdog_bringup： 启动脚本及配置。
 - tools： 开发调试工具脚本（不跟随版本发布）。
 - thirdparty：第三方库（源码形式引入）。
+- Visions: 存放相机相关功能
