@@ -172,7 +172,7 @@ static double EstimateModuleSize(const BitMatrix& image, PointF a, PointF b)
 
 	cur.turnBack();
 	cur.step();
-	assert(cur.isBlack());
+	// assert(cur.isBlack());
 
 	auto pattern = cur.readPattern<std::array<int, 4>>();
 
