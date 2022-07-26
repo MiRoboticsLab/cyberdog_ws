@@ -1,0 +1,161 @@
+type:
+  namespace: &Namespace cyberdog
+  simulator_tag:
+    device:
+      - &BMS bms
+      - &TOUCH touch
+    sensor:
+      - &GPS gps
+      - &LIDAR lidar
+      - &TOF tof
+      - &ULTRASONIC ultrasonic
+
+data:
+  bringup_test:
+    namespace: *Namespace
+    package: cyberdog_bringup_test
+    executable: cyberdog_bringup_test
+    name: bringup_test
+    exec_name: bringup_test
+    parameters:
+      - {simulator: [xxx, xxx],           description: "需要开启模拟器模式的对象"}
+      - {parameters_bool: True,               description: "bool 键值对"}
+      - {parameters_int: 100,                 description: "int 键值对"}
+      - {parameters_double: 0.1,              description: "double 键值对"}
+      - {parameters_string0: string_message,  description: "string 键值对(单string):无引号方式约束"}
+      - {parameters_string1: 'string message',description: "string 键值对(多string):单引号方式约束"}
+      - {parameters_string2: "string message",description: "string 键值对(多string):双引号方式约束"}
+      - {parameters_int_vector: [0,1,2,3,4,5,6,7,8,9],  description: "int 键值对(数组)"}
+      - {parameters_double_vector: [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9],  description: "double 键值对(数组)"}
+      - {parameters_bool_vector: [True,False,True,False,True,False,True,False,True,False],  description: "bool 键值对(数组)"}
+      - {parameters_string_vector: [string,"string",'string',"string string",'string string'],  description: "string 键值对(数组)"}
+      - {parameters_yaml: config.yaml,        description: "传入参数文件名称，由程序内部自行解析"}
+      - {<include>: test.yaml,                description: "加载 cyberdog_bringup 包下参数文件内参数"}
+      - {<include>: {package_name: cyberdog_bringup_test, config_path: config, yaml_name: config.yaml}, description: "加载 cyberdog_bringup_test 包参数文件内参数"}
+    remappings:
+      - {from: xxx1_topic,          to: xxx2_topic}
+      - {from: xxx1_topic,          to: xxx3_topic}
+      - {from: xxx1_service,        to: xxx2_service}
+    arguments:
+      usr-args:
+        - 'args1'
+        - 'args2'
+        - 'args3'
+      ros-args:
+        - '--log-level debug'
+        - '--disable-stdout-logs'
+    output: screen
+    emulate_tty: True
+    respawn: True
+
+  #------------------------------------------------------------->
+  connector:
+    package: connector
+    executable: connector
+
+  #------------------------------------------------------------->
+  device_manager:
+    package: device_manager
+    executable: device_manager
+
+  #------------------------------------------------------------->
+  sensor_manager:
+    package: sensor_manager
+    executable: sensor_manager
+
+  #------------------------------------------------------------->
+  cyberdog_manager:
+    package: cyberdog_manager
+    executable: cyberdog_manager
+
+  #------------------------------------------------------------->
+  cyberdog_wifi:
+    package: cyberdog_wifi
+    executable: cyberdog_wifi
+
+  #------------------------------------------------------------->
+  motion_manager:
+    package: motion_manager
+    executable: motion_manager
+
+  #------------------------------------------------------------->
+  odom_out_publisher:
+    package: motion_bridge
+    executable: odom_out_publisher
+
+  #------------------------------------------------------------->
+  cyberdog_grpc:
+    package: cyberdog_grpc
+    executable: app_server
+
+  #------------------------------------------------------------->
+  sim_mr813_controller:
+    package: motion_action
+    executable: test_as_controller
+
+  #------------------------------------------------------------->
+  visual_programming_engine:
+    package: visual_programming
+    executable: engine
+    output: screen
+    emulate_tty: True
+
+  #------------------------------------------------------------->
+  sim_device_manager:
+    package: device_manager
+    executable: device_manager
+    parameters:
+      - {simulator: [*BMS, *TOUCH],           description: "需要开启模拟器模式的设备"}
+
+  #------------------------------------------------------------->
+  sim_sensor_manager:
+    package: sensor_manager
+    executable: sensor_manager
+    parameters:
+      - {simulator: [*GPS, *LIDAR, *TOF, *ULTRASONIC],     description: "需要开启模拟器模式的传感器"}
+
+  #------------------------------------------------------------->
+  factory_sensor_manager:
+    namespace: factory
+    package: sensor_manager
+    executable: sensor_manager
+    parameters:
+      - {simulator: [*LIDAR],     description: "需要开启模拟器模式的传感器"}
+
+  #------------------------------------------------------------->
+  factory_device_manager:
+    namespace: factory
+    package: device_manager
+    executable: device_manager
+    parameters:
+      - {simulator: [*TOUCH],           description: "需要开启模拟器模式的设备"}
+
+  #------------------------------------------------------------->
+  static_tf_lidar:
+    package: tf2_ros
+    executable: static_transform_publisher
+    name: static_tf_pub_laser
+    arguments:
+      usr-args: ['0', '0', '0.02', '0', '0', '0', '1', 'base_link', 'laser_frame']
+
+  #------------------------------------------------------------->
+  cyberdog_audio:
+    package: cyberdog_audio
+    executable: cyberdog_audio
+
+  #------------------------------------------------------------->
+  camera_test:
+    package: camera_test
+    executable: camera_server
+    name: camera_test_server
+
+  #------------------------------------------------------------->
+  cyberdog_permission:
+    package: cyberdog_permission
+    executable: cyberdog_permission
+
+  #------------------------------------------------------------->
+  cyberdog_ota:
+    package: cyberdog_ota
+    executable: cyberdog_ota
+

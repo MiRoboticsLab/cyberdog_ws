@@ -1,0 +1,12 @@
+type:
+  xxx: &Xxx true
+
+data:
+  - file_name: main.launch.py
+    launchs: [base, navigation_bringup]
+  - file_name: simulator.launch.py
+    launchs: [sim_base, navigation_bringup]
+  - file_name: factory.launch.py
+    launchs: [factory_base]
+  - file_name: test.launch.py
+    launchs: [bringup_test]
