@@ -62,4 +62,4 @@ data:
   #------------------------------------------------------------->
   cyberdog_sudo:
     file_name: cyberdog_sudo.launch.py
-    nodes: [cyberdog_permission, cyberdog_wifi]
+    nodes: [cyberdog_permission, cyberdog_wifi, cyberdog_ota]
