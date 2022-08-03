@@ -159,3 +159,7 @@ data:
     package: cyberdog_ota
     executable: cyberdog_ota
 
+  #------------------------------------------------------------->
+  bes_transmit:
+    package: bes_transmit
+    executable: bes_transmit_waiter
