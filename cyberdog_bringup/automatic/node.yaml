@@ -94,9 +94,9 @@ data:
     executable: test_as_controller
 
   #------------------------------------------------------------->
-  visual_programming_engine:
-    package: visual_programming
-    executable: engine
+  cyberdog_vp_engine:
+    package: cyberdog_vp_engine
+    executable: cyberdog_vp_engine
     output: screen
     emulate_tty: True
 
