@@ -84,6 +84,11 @@ data:
     executable: odom_out_publisher
 
   #------------------------------------------------------------->
+  motor_bridge:
+    package: motion_bridge
+    executable: motor_bridge
+
+  #------------------------------------------------------------->
   cyberdog_grpc:
     package: cyberdog_grpc
     executable: app_server
