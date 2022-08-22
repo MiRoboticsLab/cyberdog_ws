@@ -14,19 +14,20 @@ In the following options except help:
 
 optional arguments:
     -h, --help          [*] show this help message and exit
-    -s, --connect_srv   [+] Current connection service name, usually in the following format:
-                                        /<namespace>/connect
-                                     Usually namespace is in the following format:'user_macaddress'
+    -s, --connect_srv   [-] Current connection service name, usually in the following format:
+                            /<namespace>/connect
+                            Usually namespace is in the following format:'user_macaddress'
     -n, --wifi_name     [-A] The name of the currently connected wifi
     -p, --wifi_password [-A] The password of the currently connected wifi
     -i, --provider_ip   [+] The provider ip of the currently connected wifi
 
 example:
-    1. connector.zsh -s /robot_9d_51_e5_a4_b4_74/connect -n Redmi_41A3 -p admin123 -i 192.168.0.1
-    2. connector.zsh --connect_srv /robot_9d_51_e5_a4_b4_74/connect --wifi_name Redmi_41A3 --wifi_password admin123 --provider_ip 192.168.0.1
-    3. connector.zsh --connect_srv=/robot_9d_51_e5_a4_b4_74/connect --wifi_name=Redmi_41A3 --wifi_password=admin123 --provider_ip=192.168.0.1
-    4. connector.zsh -s /robot_9d_51_e5_a4_b4_74/connect --wifi_name=Redmi_41A3 --wifi_password=admin123 --provider_ip=192.168.0.1
-    4. connector.zsh -s /robot_9d_51_e5_a4_b4_74/connect --provider_ip=192.168.0.1
+    0. ./connector.sh -i 192.168.0.1
+    1. ./connector.sh -s /robot_9d_51_e5_a4_b4_74/connect -n Redmi_41A3 -p admin123 -i 192.168.0.1
+    2. ./connector.sh --connect_srv /robot_9d_51_e5_a4_b4_74/connect --wifi_name Redmi_41A3 --wifi_password admin123 --provider_ip 192.168.0.1
+    3. ./connector.sh --connect_srv=/robot_9d_51_e5_a4_b4_74/connect --wifi_name=Redmi_41A3 --wifi_password=admin123 --provider_ip=192.168.0.1
+    4. ./connector.sh -s /robot_9d_51_e5_a4_b4_74/connect --wifi_name=Redmi_41A3 --wifi_password=admin123 --provider_ip=192.168.0.1
+    4. ./connector.sh -s /robot_9d_51_e5_a4_b4_74/connect --provider_ip=192.168.0.1
     "
 }
 
@@ -91,9 +92,23 @@ do
 shift
 done
 
-judge_parameter_must connect_srv
 judge_parameter_must provider_ip
+judge_parameter_optional connect_srv
 judge_parameter_optional wifi_name wifi_password
+
+if [[ -z "$connect_srv" ]];then
+    namespace=`ros2 node list | grep "mi_" | awk 'NR==1' | cut -f 2 -d "/"`
+    if [[ -n "$namespace" ]];then
+    connect_srv="/$namespace/connect"
+    else
+    connect_srv="/connect"
+    fi
+fi
+
+echo "ros2 service call $connect_srv protocol/srv/Connector \"wifi_name: '$wifi_name'"
+echo "wifi_password: '$wifi_password'"
+echo "provider_ip: '$provider_ip'"
+echo "\""
 
 ros2 service call $connect_srv protocol/srv/Connector "wifi_name: '$wifi_name'
 wifi_password: '$wifi_password'
