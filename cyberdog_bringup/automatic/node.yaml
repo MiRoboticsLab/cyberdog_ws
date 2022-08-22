@@ -141,7 +141,7 @@ data:
     executable: static_transform_publisher
     name: static_tf_pub_laser
     arguments:
-      usr-args: ['0', '0', '0.02', '0', '0', '0', '1', 'base_link', 'laser_frame']
+      usr-args: ['0', '0', '0.02', '1', '0', '0', '0', 'base_link', 'laser_frame']
 
   #------------------------------------------------------------->
   cyberdog_audio:
