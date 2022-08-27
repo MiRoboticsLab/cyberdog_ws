@@ -21,6 +21,7 @@ motion/
 sensors/
 utils/
 cyberdog_nav2/
+visions/
 
 # examples and tests
 examples/
