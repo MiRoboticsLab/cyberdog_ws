@@ -19,3 +19,7 @@ repositories:
     type: git  
     url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/cyberdog_visions_interfaces.git
     version: dev
+  cyberdog_mivins:
+    type: git  
+    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/cyberdog_mivins.git
+    version: dev
