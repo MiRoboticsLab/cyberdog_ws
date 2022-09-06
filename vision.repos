@@ -27,3 +27,7 @@ repositories:
     type: git  
     url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/cyberdog_lasercharging.git
     version: dev
+  cyberdog_laserslam:
+    type: git  
+    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/cyberdog_laserslam.git
+    version: dev
