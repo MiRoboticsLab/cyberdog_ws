@@ -35,3 +35,7 @@ repositories:
     type: git  
     url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/cyberdog_miloc.git
     version: dev
+  realsense-ros:
+    type: git
+    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/realsense-ros.git
+    version: dev
