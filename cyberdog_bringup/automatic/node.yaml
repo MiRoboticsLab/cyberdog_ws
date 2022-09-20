@@ -82,6 +82,15 @@ data:
   odom_out_publisher:
     package: motion_bridge
     executable: odom_out_publisher
+    parameters:
+      - {odom_frame: "odom",           
+         description: "腿式里程计的坐标系名称"}
+      - {base_frame: "base_link_leg",  
+         description: "腿式里程计的子坐标系名称"}
+      - {map_frame: "map",             
+         description: "全局坐标系名称，暂时未用到"}
+      - {tf_pub: True,             
+         description: "是否发布tf"}
 
   #------------------------------------------------------------->
   motor_bridge:
