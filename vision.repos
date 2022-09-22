@@ -39,3 +39,7 @@ repositories:
     type: git
     url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/realsense-ros.git
     version: dev
+  cyberdog_occmap:
+    type: git
+    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/cyberdog_occmap.git
+    version: dev
