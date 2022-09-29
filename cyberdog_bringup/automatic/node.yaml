@@ -155,6 +155,11 @@ data:
     executable: cyberdog_permission
 
   #------------------------------------------------------------->
+  cyberdog_face:
+    package: cyberdog_face
+    executable: cyberdog_face
+
+  #------------------------------------------------------------->
   cyberdog_ota:
     package: cyberdog_ota
     executable: cyberdog_ota
