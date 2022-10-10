@@ -168,3 +168,8 @@ data:
   bes_transmit:
     package: bes_transmit
     executable: bes_transmit_waiter
+
+  #------------------------------------------------------------->
+  cyberdog_aft:
+    package: cyberdog_aft
+    executable: cyberdog_aft_node
