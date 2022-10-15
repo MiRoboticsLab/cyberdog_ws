@@ -149,7 +149,7 @@ def get_mac():
     if len(mac) == 0:
         mac=uuid.UUID(int = uuid.getnode()).hex[-12:]
         mac = ':'.join([mac[e:e+2] for e in range(0,11,2)])
-    mac = re.sub('[:]+', '_', mac)  #.upper()  # 16进制大写
+    mac = re.sub('[:]+', '_', mac)
     return mac
 
 
