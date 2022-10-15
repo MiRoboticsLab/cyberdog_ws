@@ -17,8 +17,10 @@ import os
 import platform
 import re
 import socket
+from sqlite3 import connect
 import subprocess
 import sys
+import uuid
 import time
 
 
@@ -28,7 +30,7 @@ import time
 def preprocessing():
     argv = sys.argv[0:]
     sys.argv = sys.argv[0:3]
-    if (len(argv) > 4):
+    if len(argv) > 4:
         version_info = """
 version: 0.0.3 (default, 4 9 2022, 20:11:20)
 Python: 3.8.10 (default, Mar 15 2022, 12:22:08)  [GCC 9.4.0]
@@ -64,8 +66,8 @@ of the current program before starting it.
                 arg_str = re.sub(r'^(mi:=)+', '', now_arg)
                 arg_list = arg_str.split()
                 opts, args = getopt.getopt(
-                    arg_list, '-h-v-r-d:',
-                    ['help', 'version', 'reboot', 'data='])
+                    arg_list, '-h-v-r-d:', ['help', 'version', 'reboot', 'data=']
+                )
                 for opt_name, opt_value in opts:
                     if opt_name in ('-h', '--help'):
                         print('[', user, '] [mi] Help info:', help_info)
@@ -84,16 +86,22 @@ of the current program before starting it.
                         while True:
                             find_cmd_output = os.popen(find_cmd, 'r')
                             size_int = int(
-                                re.sub(r'[^0-9]+', '', find_cmd_output.read()))
+                                re.sub(r'[^0-9]+', '', find_cmd_output.read())
+                            )
                             if size_int > 3:
                                 kill_cmd_output = os.popen(kill_cmd, 'r')
-                                print('[', user, '] [mi] Stopping[',
-                                      int(size_int - 4), ']: ', target_ps,
-                                      kill_cmd_output)
+                                print(
+                                    '[',
+                                    user,
+                                    '] [mi] Stopping[',
+                                    int(size_int - 4),
+                                    ']: ',
+                                    target_ps,
+                                    kill_cmd_output,
+                                )
                                 time.sleep(2)
                             else:
-                                print('[', user, '] [mi] About to start:',
-                                      target_ps)
+                                print('[', user, '] [mi] About to start:', target_ps)
                                 break
                     if opt_name in ('-d', '--data'):
                         data_value = opt_value
@@ -115,11 +123,34 @@ def get_shell(cmd):
         shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        encoding='utf_8')
+        encoding='utf_8',
+    )
     data = cmd_ret.communicate()[0]
-    data = re.sub('[^0-9a-zA-Z:]+', '', data)
-    data = re.sub('[:]+', '_', data)
     return data
+
+
+#
+# 获取 计算机 MAC 地址
+# cat /sys/class/net/xxx/address
+# ifconfig xxx | grep ether | awk 'NR==1' |awk '{print $2}'
+#
+def get_mac():
+    net_list = get_shell('ls /sys/class/net/').split('\n')
+    for net in net_list:
+        mac = ''
+        if len(net) == 0:
+            continue
+        net = re.sub('[^0-9a-zA-Z:]+', '', net)
+        mac = get_shell('cat /sys/class/net/' + net + '/address').strip()
+        if mac == '00:00:00:00:00:00':
+            continue
+        if len(mac) != 0:
+            break
+    if len(mac) == 0:
+        mac=uuid.UUID(int = uuid.getnode()).hex[-12:]
+        mac = ':'.join([mac[e:e+2] for e in range(0,11,2)])
+    mac = re.sub('[:]+', '_', mac)  #.upper()  # 16进制大写
+    return mac
 
 
 #
@@ -127,8 +158,7 @@ def get_shell(cmd):
 #
 def get_namespace():
     hostname = socket.getfqdn(socket.gethostname())
-    mac = get_shell("ifconfig |grep ether| awk 'NR==1' |awk '{print $2}'")
-    # sn = get_shell("cat /dev/mmcblk0p11 | grep -a PSN | cut -c 6-23")
+    mac = get_mac()
     namespace = hostname + '_' + mac
     namespace = re.sub('[^0-9a-zA-Z]+', '_', namespace)
     return namespace
