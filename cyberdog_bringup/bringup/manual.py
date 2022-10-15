@@ -17,7 +17,6 @@ import os
 import platform
 import re
 import socket
-from sqlite3 import connect
 import subprocess
 import sys
 import uuid
@@ -147,8 +146,8 @@ def get_mac():
         if len(mac) != 0:
             break
     if len(mac) == 0:
-        mac=uuid.UUID(int = uuid.getnode()).hex[-12:]
-        mac = ':'.join([mac[e:e+2] for e in range(0,11,2)])
+        mac = uuid.UUID(int(uuid.getnode())).hex[-12:]
+        mac = ':'.join([mac[e:e+2] for e in range(0, 11, 2)])
     mac = re.sub('[:]+', '_', mac)
     return mac
 
