@@ -361,7 +361,7 @@ void User_LD2BRM_PvtVelNedPolled(LD2BRM_PvtVelNedPolledPayload & payload)
 
 void User_LD2BRM_Nmea(U1 * str, U4 len)
 {
-  LD2_LOG("USER NMEA : %s", str);
+  LD2_FLOG("USER NMEA : %s", str);
   for (auto & cb : NMEA_callbacks_) {
     if (cb.second != nullptr) {
       cb.second(str, len);
