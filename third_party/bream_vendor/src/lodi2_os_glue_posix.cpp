@@ -1045,7 +1045,6 @@ void LD2OS_assert(const char *format, ...)
 void LD2OS_log(bool bFileOnly, const char *format, ...)
 {
     std::lock_guard<std::recursive_mutex> lk(LogLock);
-
     char buf[4096];
     char *pbuf = buf;
     pbuf += sprintf(pbuf, "[%10u] ", LD2OS_getTime());
