@@ -178,3 +178,8 @@ data:
   cyberdog_bluetooth:
     package: cyberdog_bluetooth
     executable: cyberdog_bluetooth_main
+
+  #------------------------------------------------------------->
+  cyberdog_action:
+    package: cyberdog_action
+    executable: cyberdog_action
