@@ -33,6 +33,10 @@ cd caculate_commitid_sum/version_manager_tools
 ./get_commitid_sum.sh ros_platform_code.xml carpo-cyberdog-ros2-lib
 cp ros_platform_code.commitidsum /carpo_deb_repos
 
+echo -n "collect commit info of all repos"
+./get_commitid_sum.sh /carpo_ws/src ros_platform_repos.info
+cp ros_platform_repos.info /carpo_deb_repos
+
 cd /
 cp /opt/ros2/cyberdog/* /carpo_deb_repos/carpo_cyberdog_ros2_lib_deb/src/opt/ros2/cyberdog/ -rf
 
