@@ -34,7 +34,7 @@ cd caculate_commitid_sum/version_manager_tools
 cp ros_platform_code.commitidsum /carpo_deb_repos
 
 echo -n "collect commit info of all repos"
-./get_commitid_sum.sh /carpo_ws/src ros_platform_repos.info
+./collect_repos_info.sh /carpo_ws/src ros_platform_repos.info
 cp ros_platform_repos.info /carpo_deb_repos
 
 cd /
