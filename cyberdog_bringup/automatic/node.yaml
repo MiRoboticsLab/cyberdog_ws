@@ -183,3 +183,8 @@ data:
   cyberdog_action:
     package: cyberdog_action
     executable: cyberdog_action
+
+  #------------------------------------------------------------->
+  cyberdog_interactive:
+    package: cyberdog_interactive
+    executable: cyberdog_interactive
