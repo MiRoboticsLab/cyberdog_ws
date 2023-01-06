@@ -188,3 +188,8 @@ data:
   cyberdog_interactive:
     package: cyberdog_interactive
     executable: cyberdog_interactive
+
+  #------------------------------------------------------------->
+  unlock_request:
+    package: unlock_request
+    executable: unlock_request
