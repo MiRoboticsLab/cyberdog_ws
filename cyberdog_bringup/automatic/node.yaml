@@ -193,3 +193,8 @@ data:
   unlock_request:
     package: unlock_request
     executable: unlock_request
+
+  #------------------------------------------------------------->
+  cyberdog_train:
+    package: cyberdog_train
+    executable: cyberdog_train
