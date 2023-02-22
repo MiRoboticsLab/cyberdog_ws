@@ -193,3 +193,7 @@ data:
   unlock_request:
     package: unlock_request
     executable: unlock_request
+  #------------------------------------------------------------->
+  cyberdog_ai_sports:
+    package: cyberdog_ai_sports
+    executable: cyberdog_ai_sports
