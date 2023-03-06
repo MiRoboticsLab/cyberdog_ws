@@ -57,25 +57,25 @@ of the current program before starting it.
   -d, --data            Reserve option
 """
 
-        user_env_var = 'USERNAME' if platform.system() == 'Windows' else 'USER'
+        user_env_var = "USERNAME" if platform.system() == "Windows" else "USER"
         user = os.environ[user_env_var]
-        print('[', user, '] [mi] Preprocessing(', str(argv[4:]), ')...')
+        print("[", user, "] [mi] Preprocessing(", str(argv[4:]), ")...")
         for now_arg in argv[4:]:
-            if re.match(r'^(mi:=)+.*$', now_arg):
-                arg_str = re.sub(r'^(mi:=)+', '', now_arg)
+            if re.match(r"^(mi:=)+.*$", now_arg):
+                arg_str = re.sub(r"^(mi:=)+", "", now_arg)
                 arg_list = arg_str.split()
                 opts, args = getopt.getopt(
-                    arg_list, '-h-v-r-d:', ['help', 'version', 'reboot', 'data=']
+                    arg_list, "-h-v-r-d:", ["help", "version", "reboot", "data="]
                 )
                 for opt_name, opt_value in opts:
-                    if opt_name in ('-h', '--help'):
-                        print('[', user, '] [mi] Help info:', help_info)
+                    if opt_name in ("-h", "--help"):
+                        print("[", user, "] [mi] Help info:", help_info)
                         exit()
-                    if opt_name in ('-v', '--version'):
-                        print('[', user, '] [mi] Version info:', version_info)
+                    if opt_name in ("-v", "--version"):
+                        print("[", user, "] [mi] Version info:", version_info)
                         exit()
-                    if opt_name in ('-r', '--reboot'):
-                        target_ps = ' '.join(argv[0:4])
+                    if opt_name in ("-r", "--reboot"):
+                        target_ps = " ".join(argv[0:4])
                         _ps = "ps -ef | grep '" + target_ps
                         _find = "' | wc -l"
                         _kill = "' | awk 'NR==1'| awk '{print $2}' | xargs kill -9"
@@ -83,34 +83,34 @@ of the current program before starting it.
                         kill_cmd = _ps + _kill
                         "' | awk 'NR==1'| awk '{print $2}' | xargs kill -9"
                         while True:
-                            find_cmd_output = os.popen(find_cmd, 'r')
+                            find_cmd_output = os.popen(find_cmd, "r")
                             size_int = int(
-                                re.sub(r'[^0-9]+', '', find_cmd_output.read())
+                                re.sub(r"[^0-9]+", "", find_cmd_output.read())
                             )
                             if size_int > 3:
-                                kill_cmd_output = os.popen(kill_cmd, 'r')
+                                kill_cmd_output = os.popen(kill_cmd, "r")
                                 print(
-                                    '[',
+                                    "[",
                                     user,
-                                    '] [mi] Stopping[',
+                                    "] [mi] Stopping[",
                                     int(size_int - 4),
-                                    ']: ',
+                                    "]: ",
                                     target_ps,
                                     kill_cmd_output,
                                 )
                                 time.sleep(2)
                             else:
-                                print('[', user, '] [mi] About to start:', target_ps)
+                                print("[", user, "] [mi] About to start:", target_ps)
                                 break
-                    if opt_name in ('-d', '--data'):
+                    if opt_name in ("-d", "--data"):
                         data_value = opt_value
-                        print('[', user, '] [*] data is ', data_value)
+                        print("[", user, "] [*] data is ", data_value)
                         # do something
                         exit()
             else:
                 continue
         else:
-            print('[', user, '] [mi] Preprocessing is complete')
+            print("[", user, "] [mi] Preprocessing is complete")
 
 
 #
@@ -122,7 +122,7 @@ def get_shell(cmd):
         shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        encoding='utf_8',
+        encoding="utf_8",
     )
     data = cmd_ret.communicate()[0]
     return data
@@ -130,25 +130,33 @@ def get_shell(cmd):
 
 #
 # 获取 计算机 MAC 地址
+# 默认网卡：随机第一个非0地址
 # cat /sys/class/net/xxx/address
 # ifconfig xxx | grep ether | awk 'NR==1' |awk '{print $2}'
 #
-def get_mac():
-    net_list = get_shell('ls /sys/class/net/').split('\n')
-    for net in net_list:
-        mac = ''
-        if len(net) == 0:
-            continue
-        net = re.sub('[^0-9a-zA-Z:]+', '', net)
-        mac = get_shell('cat /sys/class/net/' + net + '/address').strip()
-        if mac == '00:00:00:00:00:00':
-            continue
-        if len(mac) != 0:
-            break
+def get_mac(target_network_card_name=""):
+    mac = "00:00:00:00:00:00"
+    net_list = get_shell("ls /sys/class/net/").split("\n")
+    if len(target_network_card_name) == 0:
+        for net in net_list:
+            mac = ""
+            if len(net) == 0:
+                continue
+            net = re.sub("[^0-9a-zA-Z:]+", "", net)
+            mac = get_shell("cat /sys/class/net/" + net + "/address").strip()
+            if mac == "00:00:00:00:00:00":
+                continue
+            if len(mac) != 0:
+                break
+    else:
+        if net_list.count(target_network_card_name):
+            mac = get_shell(
+                "cat /sys/class/net/" + target_network_card_name + "/address"
+            ).strip()
     if len(mac) == 0:
         mac = uuid.UUID(int(uuid.getnode())).hex[-12:]
-        mac = ':'.join([mac[e:e+2] for e in range(0, 11, 2)])
-    mac = re.sub('[:]+', '_', mac)
+        mac = ":".join([mac[e: e + 2] for e in range(0, 11, 2)])
+    mac = re.sub("[:]+", "_", mac)
     return mac
 
 
@@ -157,7 +165,7 @@ def get_mac():
 #
 def get_namespace():
     hostname = socket.getfqdn(socket.gethostname())
-    mac = get_mac()
-    namespace = hostname + '_' + mac
-    namespace = re.sub('[^0-9a-zA-Z]+', '_', namespace)
+    mac = get_mac("eth0")
+    namespace = hostname + "_" + mac
+    namespace = re.sub("[^0-9a-zA-Z]+", "_", namespace)
     return namespace
