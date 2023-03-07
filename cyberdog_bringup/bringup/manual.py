@@ -130,24 +130,32 @@ def get_shell(cmd):
 
 #
 # 获取 计算机 MAC 地址
+# 默认网卡：随机第一个非0地址
 # cat /sys/class/net/xxx/address
 # ifconfig xxx | grep ether | awk 'NR==1' |awk '{print $2}'
 #
-def get_mac():
+def get_mac(target_network_card_name=''):
+    mac = '00:00:00:00:00:00'
     net_list = get_shell('ls /sys/class/net/').split('\n')
-    for net in net_list:
-        mac = ''
-        if len(net) == 0:
-            continue
-        net = re.sub('[^0-9a-zA-Z:]+', '', net)
-        mac = get_shell('cat /sys/class/net/' + net + '/address').strip()
-        if mac == '00:00:00:00:00:00':
-            continue
-        if len(mac) != 0:
-            break
+    if len(target_network_card_name) == 0:
+        for net in net_list:
+            mac = ''
+            if len(net) == 0:
+                continue
+            net = re.sub('[^0-9a-zA-Z:]+', '', net)
+            mac = get_shell('cat /sys/class/net/' + net + '/address').strip()
+            if mac == '00:00:00:00:00:00':
+                continue
+            if len(mac) != 0:
+                break
+    else:
+        if net_list.count(target_network_card_name):
+            mac = get_shell(
+                'cat /sys/class/net/' + target_network_card_name + '/address'
+            ).strip()
     if len(mac) == 0:
         mac = uuid.UUID(int(uuid.getnode())).hex[-12:]
-        mac = ':'.join([mac[e:e+2] for e in range(0, 11, 2)])
+        mac = ':'.join([mac[e: e + 2] for e in range(0, 11, 2)])
     mac = re.sub('[:]+', '_', mac)
     return mac
 
@@ -157,7 +165,7 @@ def get_mac():
 #
 def get_namespace():
     hostname = socket.getfqdn(socket.gethostname())
-    mac = get_mac()
+    mac = get_mac('eth0')
     namespace = hostname + '_' + mac
     namespace = re.sub('[^0-9a-zA-Z]+', '_', namespace)
     return namespace

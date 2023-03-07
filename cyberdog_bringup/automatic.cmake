@@ -94,9 +94,9 @@ function(get_launch_data file_)
   "from launch.substitutions import LaunchConfiguration\n"
   "from ament_index_python.packages import get_package_share_directory\n"
   "\n"
-  "sys.path.append(os.path.join(get_package_share_directory('${PROJECT_NAME}'), 'bringup'))\n"
-  "from manual import preprocessing\n"
-  "from manual import get_namespace\n"
+  "from mi.cyberdog_bringup.manual import preprocessing\n"
+  "from mi.cyberdog_bringup.manual import get_namespace\n"
+  "\n"
   "preprocessing()\n"
   "\n"
   PARENT_SCOPE
