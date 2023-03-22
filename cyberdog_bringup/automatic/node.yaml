@@ -89,7 +89,7 @@ data:
          description: "腿式里程计的子坐标系名称"}
       - {map_frame: "map",             
          description: "全局坐标系名称，暂时未用到"}
-      - {tf_pub: True,             
+      - {tf_pub: False,             
          description: "是否发布tf"}
 
   #------------------------------------------------------------->
