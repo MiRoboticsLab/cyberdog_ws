@@ -203,3 +203,8 @@ data:
   cyberdog_train:
     package: cyberdog_train
     executable: cyberdog_train
+
+  #------------------------------------------------------------->
+  realsense2_camera:
+    package: realsense2_camera
+    executable: realsense2_actuator_node
