@@ -1,4 +1,4 @@
-# <center>cyberdog_bringup</center>
+# <center>cyberdog_bringup 设计文档</center>
 
 ## <font color=Blue size=4> 目录 </font>
 * [1. 修订](#1-修订)
@@ -43,7 +43,7 @@ bringup 启动约束分两类，即配置文件（*.yaml）和 命令行启动�
 
 <center>
 
-![](./doc/image/cyberdog_bringup.svg)
+![](./image/cyberdog_bringup.svg)
 
 </center>
 
