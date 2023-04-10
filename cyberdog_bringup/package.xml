@@ -4,7 +4,7 @@
   <name>cyberdog_bringup</name>
   <version>1.0.0</version>
   <description>Bringup all cyberdog modules</description>
-  <maintainer email="dukun1@xiaomi.com">xuhaiwang</maintainer>
+  <maintainer email="shangzihan@xiaomi.com">ShangZihan</maintainer>
   <license>Apache License, Version 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
