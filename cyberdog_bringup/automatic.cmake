@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Beijing Xiaomi Mobile Software Co., Ltd. All rights reserved.
+# Copyright (c) 2023 Beijing Xiaomi Mobile Software Co., Ltd. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ endfunction()
 #
 function(get_launch_data file_)
   set(${file_}
-  "# Copyright (c) 2021 Beijing Xiaomi Mobile Software Co., Ltd. All rights reserved.\n"
+  "# Copyright (c) 2023 Beijing Xiaomi Mobile Software Co., Ltd. All rights reserved.\n"
   "#\n"
   "# Licensed under the Apache License, Version 2.0 (the \"License\");\n"
   "# you may not use this file except in compliance with the License.\n"
