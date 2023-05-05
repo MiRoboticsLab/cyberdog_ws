@@ -1,0 +1,64 @@
+// Copyright (c) 2021 Xiaomi Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.#include "cyberdog_aft/motion/motion_interface.hpp"
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.cyberdogaft";
+option java_outer_classname = "CyberdogAFTProto";
+option objc_class_prefix = "RTG";
+
+package grpcapi;
+
+// AFT service
+service ServerAFT 
+{
+  // Sends messages
+  rpc SendMessages(AFTRequest) returns (stream AFTResponse);
+}
+
+message AFTRequest 
+{
+    fixed32 name_code     = 1;
+    string params         = 2;
+
+    enum NameCodeType
+    {
+        INVALID = 0;
+        AFT_VERSION_REQUEST = 1001;
+        AFT_VERSION_RESPONSE = 1002;
+        AFT_ROBOT_POSE_STATE_REQUEST = 2001;  // 机器人姿态和速度
+        AFT_ROBOT_POSE_STATE_RESPONSE = 2002; 
+        AFT_MAP_REQUEST = 3001;
+        AFT_MAP_RESPONSE = 3002;
+        AFT_MODULES_TEST_REQUEST = 4001;
+        AFT_MODULES_TEST_RESPONSE = 4002;
+        AFT_MODULES_POSITION_REQUEST = 5001;
+        AFT_MODULES_POSITION_RESPONSE = 5002;
+        AFT_BMS_REQUEST = 6001;
+        AFT_BMS_RESPONSE = 6002;
+    }
+}
+
+message AFTResponse 
+{
+    fixed32 name_code     = 1;
+    bytes data          = 2;
+}
+
+message Result 
+{
+    string result = 1;
+}
+

@@ -1,0 +1,18 @@
+[useOdom]
+default = true
+checkStopDistance = [0.85, 1.25]
+
+[MotionItem]
+motorTempStopMotion = 83.0
+motorTempStartMotion = 78.0
+stepHeight = [0.04, 0.04]
+
+lowVecValue = [0.5, 0.0, 0.0]
+midVecValue = [0.8, 0.0, 0.0]
+highVecValue = [1.0, 0.0, 0.0]
+
+motionIDSequence = [302, 304, 301, 305]
+
+LowVecCount = 5
+MidVecCount = 5
+HighVecCount = 5

@@ -1,0 +1,10 @@
+[bytopic]
+total_frame = 50
+AICamera_picture = 3
+timeout = 180
+
+[others]
+charge_duration = 300
+mic_volume = 100
+CPU_test_duration = 420
+CPU_temperature_threhold = 69000
