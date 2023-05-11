@@ -1,33 +1,77 @@
 repositories:
   bridges:
     type: git
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/bridges.git
-    version: dev
+    url: git@github.com:MiRoboticsLab/bridges.git
+    version: rolling
   devices:
     type: git
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/devices.git
-    version: dev
+    url: git@github.com:MiRoboticsLab/devices.git
+    version: rolling
   interaction:
     type: git
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/interaction.git
-    version: dev
+    url: git@github.com:MiRoboticsLab/interaction.git
+    version: rolling
   manager:
     type: git
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/manager.git
-    version: dev
+    url: git@github.com:MiRoboticsLab/manager.git
+    version: rolling
   motion:
     type: git
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/motion.git
-    version: dev
+    url: git@github.com:MiRoboticsLab/motion.git
+    version: rolling
   sensors:
     type: git
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/sensors.git
-    version: dev
+    url: git@github.com:MiRoboticsLab/sensors.git
+    version: rolling
   utils:
     type: git
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/utils.git
-    version: dev
+    url: git@github.com:MiRoboticsLab/utils.git
+    version: rolling
   cyberdog_nav2:
     type: git
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/cyberdog_nav2.git
-    version: dev
+    url: git@github.com:MiRoboticsLab/cyberdog_nav2.git
+    version: rolling
+  cyberdog_tracking_base:
+    type: git
+    url: git@github.com:MiRoboticsLab/cyberdog_tracking_base.git
+    version: rolling
+  cyberdog_tracking:
+    type: git
+    url: git@github.com:MiRoboticsLab/cyberdog_tracking.git
+    version: rolling
+  cyberdog_camera:
+    type: git
+    url: git@github.com:MiRoboticsLab/cyberdog_camera.git
+    version: rolling
+  cyberdog_vision:
+    type: git  
+    url: git@github.com:MiRoboticsLab/cyberdog_vision.git
+    version: rolling
+  cyberdog_visions_interfaces:
+    type: git  
+    url: git@github.com:MiRoboticsLab/cyberdog_visions_interfaces.git
+    version: rolling
+  cyberdog_mivins:
+    type: git  
+    url: git@github.com:MiRoboticsLab/cyberdog_mivins.git
+    version: rolling
+  cyberdog_lasercharging:
+    type: git  
+    url: git@github.com:MiRoboticsLab/cyberdog_lasercharging.git
+    version: rolling
+  cyberdog_laserslam:
+    type: git  
+    url: git@github.com:MiRoboticsLab/cyberdog_laserslam.git
+    version: rolling
+  cyberdog_miloc:
+    type: git  
+    url: git@github.com:MiRoboticsLab/cyberdog_miloc.git
+    version: rolling
+  realsense-ros:
+    type: git
+    url: git@github.com:MiRoboticsLab/realsense-ros.git
+    version: rolling
+  cyberdog_occmap:
+    type: git
+    url: git@github.com:MiRoboticsLab/cyberdog_occmap.git
+    version: rolling
