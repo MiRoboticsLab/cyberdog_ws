@@ -37,5 +37,5 @@ repositories:
     version: rolling
   cyberdog_visions_interfaces:
     type: git  
-    url: git@git.n.xiaomi.com:MiRoboticsLab/rop/visions/cyberdog_visions_interfaces.git
+    url: git@github.com:MiRoboticsLab/cyberdog_visions_interfaces.git
     version: rolling
