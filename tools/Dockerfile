@@ -60,7 +60,7 @@ RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu/ bionic main" > /
 && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
 RUN mkdir carpo-ros2-debs \
-&& wget https://cnbj2m-fds.api.xiaomi.net/bsp-internal/ROS/carpo-ros2-debs/carpo-ros2-debs.tgz \
+&& wget https://cnbj2m.fds.api.xiaomi.com/bsp-internal/ROS/carpo-ros2-debs/carpo-ros2-debs.tgz \
 && tar -xf carpo-ros2-debs.tgz -C carpo-ros2-debs \
 && dpkg -i carpo-ros2-debs/*.deb \
 && rm -rf *
