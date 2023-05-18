@@ -1,0 +1,37 @@
+repositories:
+  bridges:
+    type: git
+    url: https://github.com/MiRoboticsLab/bridges.git
+    version: rolling
+  devices:
+    type: git
+    url: https://github.com/MiRoboticsLab/devices.git
+    version: rolling
+  interaction:
+    type: git
+    url: https://github.com/MiRoboticsLab/interaction.git
+    version: rolling
+  manager:
+    type: git
+    url: https://github.com/MiRoboticsLab/manager.git
+    version: rolling
+  motion:
+    type: git
+    url: https://github.com/MiRoboticsLab/motion.git
+    version: rolling
+  sensors:
+    type: git
+    url: https://github.com/MiRoboticsLab/sensors.git
+    version: rolling
+  utils:
+    type: git
+    url: https://github.com/MiRoboticsLab/utils.git
+    version: rolling
+  cyberdog_nav2:
+    type: git
+    url: https://github.com/MiRoboticsLab/cyberdog_nav2.git
+    version: rolling
+  cyberdog_tracking_base:
+    type: git
+    url: https://github.com/MiRoboticsLab/cyberdog_tracking_base.git
+    version: rolling
