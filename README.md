@@ -28,7 +28,16 @@ vcs import . < cyberdog.repos
 
 ## 使用示例
 可作为开发用参考demo，非原生功能
-待补充
+
+| demo名称                | 功能描述     | github地址                                             |
+| ----------------------- | ------------ | ------------------------------------------------------ |
+| grpc_demo               | grpc通信例程 | https://github.com/WLwind/grpc_demo                    |
+| audio_demos             | 语音例程     | https://github.com/jiayy2/audio_demos                  |
+| cyberdog_ai_sports_demo | 运动计数例程 | https://github.com/Ydw-588/cyberdog_ai_sports_demo     |
+| cyberdog_face_demo      | 人脸识别demo | https://github.com/Ydw-588/cyberdog_face_demo          |
+| nav2_demo               | 导航         | https://github.com/duyongquan/nav2_demo                |
+| cyberdog_vp_demo        | 可视化编程   | https://github.com/szh-cn/cyberdog_vp_demo             |
+| cyberdog_action_demo    | 手势动作识别 | https://github.com/liangxiaowei00/cyberdog_action_demo |
 
 
 ## 文档
