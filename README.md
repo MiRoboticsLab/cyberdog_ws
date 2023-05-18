@@ -28,6 +28,7 @@ vcs import . < cyberdog.repos
 
 ## 使用示例
 可作为开发用参考demo，非原生功能
+待补充
 
 
 ## 文档
