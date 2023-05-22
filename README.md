@@ -3,11 +3,15 @@
 ## 项目名称
 本项目是基于小米铁蛋四足开发者平台的主要功能包。
 ## 仓库介绍
-该仓库为四组开发平台项目代码主仓库，拉取该仓库代码，进入cyberdog_ws目录，可以用以下命令进行子模块展开：
+该仓库为四足开发平台项目代码主仓库，拉取该仓库代码，进入cyberdog_ws目录，可以用以下命令进行子模块展开：
 
 ```
 vcs import . < cyberdog.repos
 ```
+备注：vcstools 是一个用于管理多个版本控制系统（Version Control System）的软件包。具体可参考https://github.com/dirk-thomas/vcstool
+
+
+
 | 仓库名称               | 仓库地址                                                | 主要功能                                                     | 设计文档                                                     |
 | ---------------------- | ------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | cyberdog_ws            | https://github.com/MiRoboticsLab/cyberdog_ws            | 启动模块                                                     | [启动模块](https://miroboticslab.github.io/blogs/#/cn/cyberdog_bringup_cn)<br/> |
@@ -20,6 +24,7 @@ vcs import . < cyberdog.repos
 | cyberdog_nav2          | https://github.com/MiRoboticsLab/cyberdog_nav           | 算法任务管理相关                                             | [算法任务管理](https://miroboticslab.github.io/blogs/#/cn/algorithm_manager_cn)<br/> |
 | cyberdog_tracking_base | https://github.com/MiRoboticsLab/cyberdog_tracking_base | 存放了基于navigation2实现的docking， navigation， tracking功能相关的参数<br/>附加模块等 |                                                              |
 | utils                  | https://github.com/MiRoboticsLab/utils                  | 通用接口库                                                   | [通用接口库](https://miroboticslab.github.io/blogs/#/cn/cyberdog_common_cn)<br/> |
+
 
 
 ## 安装使用
