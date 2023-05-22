@@ -8,6 +8,8 @@
 ```
 vcs import . < cyberdog.repos
 ```
+备注：vcstools 是一个用于管理多个版本控制系统（Version Control System）的软件包。具体可参考https://github.com/dirk-thomas/vcstool
+
 | 仓库名称               | 仓库地址                                                | 主要功能                                                     |
 | ---------------------- | ------------------------------------------------------- | ------------------------------------------------------------ |
 | cyberdog_ws            | https://github.com/MiRoboticsLab/cyberdog_ws            | 传感器管理节点<br/>gps数据发布插件<br/>雷达数据发布插件<br/>tof数据发布插件<br/>超声数据发布插件 |
