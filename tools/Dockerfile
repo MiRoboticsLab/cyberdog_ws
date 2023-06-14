@@ -49,7 +49,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN wget https://cnbj2m.fds.api.xiaomi.com/bsp-internal/ROS/open-source-docker-depends/base-deb.tar.gz \
 && tar -xzvf base-deb.tar.gz \
 && cp base-deb/*.deb /var/cache/apt/archives/ \
-&& apt install --no-install-recommends /var/cache/apt/archives/*.deb \
+&& apt install --no-install-recommends -y --allow-downgrades /var/cache/apt/archives/*.deb \
 && rm -rf *
 
 # change pip mirror (replace one near you)
@@ -73,7 +73,7 @@ RUN wget https://cnbj2m.fds.api.xiaomi.com/bsp-internal/ROS/open-source-docker-d
 && tar -xzvf docker-depend.tar.gz \
 && dpkg -i docker-depend/dpkg-deb/*.deb \
 && cp docker-depend/apt-deb/*.deb /var/cache/apt/archives/ \
-&& apt install --no-install-recommends -y /var/cache/apt/archives/*.deb \
+&& apt install --no-install-recommends -y --allow-downgrades /var/cache/apt/archives/*.deb \
 && python3 -m pip install --no-index --find-link ./docker-depend/whls/ -r ./docker-depend/whls/requirement.txt --ignore-installed \
 && cp docker-depend/config-file/libwebrtc.a /usr/local/lib \
 && cp docker-depend/config-file/libgalaxy-fds-sdk-cpp.a /usr/local/lib/ \
