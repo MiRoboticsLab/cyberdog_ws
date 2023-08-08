@@ -170,11 +170,6 @@ data:
     executable: bes_transmit_waiter
 
   #------------------------------------------------------------->
-  cyberdog_aft:
-    package: cyberdog_aft
-    executable: cyberdog_aft_node
-
-  #------------------------------------------------------------->
   cyberdog_bluetooth:
     package: cyberdog_bluetooth
     executable: cyberdog_bluetooth_main
