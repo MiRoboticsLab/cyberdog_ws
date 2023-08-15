@@ -59,7 +59,7 @@ judge_parameter_optional() {
     fi
 }
 
-[ $? -ne 0 ] && help
+[ $# -eq 0 ] && help_info
 #set -- "${ARGS}"
 eval set -- "${ARGS}"
 while true
