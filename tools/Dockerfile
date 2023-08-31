@@ -56,8 +56,7 @@ RUN wget https://cnbj2m.fds.api.xiaomi.com/bsp-internal/ROS/open-source-docker-d
 RUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple pip -U \
 && pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
-RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu/ bionic main" > /etc/apt/sources.list.d/ros2-latest.list \
-&& apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu/ bionic main" > /etc/apt/sources.list.d/ros2-latest.list 
 
 RUN mkdir carpo-ros2-debs \
 && wget https://cnbj2m.fds.api.xiaomi.com/bsp-internal/ROS/carpo-ros2-debs/carpo-ros2-debs.tgz \
