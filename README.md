@@ -51,6 +51,8 @@ vcs import . < cyberdog.repos
 
 详细文档请参考：[项目博客文档](https://miroboticslab.github.io/blogs/#/)
 
+刷机请参考：[刷机包下载](https://s.xiaomi.cn/c/MSkyI-B2)
+
 ## 版权和许可
 
 四足开发者平台遵循Apache License 2.0 开源协议。详细的协议内容请查看 [LICENSE.txt](./LICENSE.txt)
