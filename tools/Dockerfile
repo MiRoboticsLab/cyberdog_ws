@@ -84,7 +84,8 @@ RUN wget https://cnbj2m.fds.api.xiaomi.com/bsp-internal/ROS/open-source-docker-d
 && rm -rf * 
 
 RUN rm -f /usr/bin/python \
-&& ln -s /usr/bin/python3 /usr/bin/python
+&& ln -s /usr/bin/python3 /usr/bin/python \
+&& chown -R root:root /opt/ros2/cyberdog
 
 # set ros 2 environment configs
 RUN echo "ros2_galactic_on(){" >> /root/.bashrc && \
