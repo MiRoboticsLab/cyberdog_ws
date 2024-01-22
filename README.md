@@ -51,7 +51,7 @@ vcs import . < cyberdog.repos
 
 详细文档请参考：[项目博客文档](https://miroboticslab.github.io/blogs/#/)
 
-刷机请参考：[刷机包下载](https://s.xiaomi.cn/c/MSkyI-B2)
+刷机请参考：[刷机包下载](https://s.xiaomi.cn/c/8JEpGDY8)
 
 ## 版权和许可
 
